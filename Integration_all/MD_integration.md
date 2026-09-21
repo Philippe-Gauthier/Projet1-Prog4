@@ -93,5 +93,55 @@ border-radius: 10px
 alt: texte alternatif ici
 @@@
 
+<!-- SAID_START -->
 
+Slide::
 
+## 7. Test Said
+
+# Mon document
+
+## Introduction
+
+Ceci est un texte normal.
+
+**Ceci est en gras.**
+
+*Ceci est en italique*
+
+***Ceci est en ******italique******&******Gras******.***
+
+### Ma liste :
+
+• Pomme
+
+• Banane
+
+• Orange
+
+### Ma liste numérotée :
+
+1. Étape un
+
+2. Étape deux
+
+3. Étape trois
+
+4. Étape quatre
+
+Mon tableau :
+
+| Dembele | Griezman | Ronaldo | Barcola |
+| --- | --- | --- | --- |
+| Vitinha | Veratti | Mazadona | Zaire-emery |
+| Hakimi | mendes | marquinhos | Ramos |
+
+### Mon lien :
+
+[https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
+
+### Mon image :
+
+![image1.jpeg](images/image1.jpeg)
+
+<!-- SAID_END -->
