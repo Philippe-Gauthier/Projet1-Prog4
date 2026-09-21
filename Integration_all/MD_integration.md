@@ -41,6 +41,10 @@ Ceci est un test des couleurs.
 
 {{red|Texte rouge}}
 
+{{#FF0000|Texte rouge en hexadécimal}}
+
+{{blue,=#FFFF00|Texte bleu avec fond jaune}}
+
 {{blue|Texte bleu}}
 
 {{=yellow|Texte avec un fond jaune}}

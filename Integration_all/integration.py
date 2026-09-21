@@ -13,6 +13,24 @@ FILE = "MD_integration.md"
 OUTPUT_FILE = "HTML_integration.html"
 
 # Antoine
+
+# Liste des couleurs acceptées
+COULEURS_VALIDES = {
+    "red", "blue", "green", "yellow", "orange",
+    "purple", "pink", "black", "white", "gray"
+}
+
+def couleur_valide(couleur):
+    # Accepte une couleur présente dans la liste
+    if couleur.lower() in COULEURS_VALIDES:
+        return True
+
+    # Accepte un code hexadécimal comme #FF0000
+    if re.fullmatch(r"#[0-9a-fA-F]{6}", couleur):
+        return True
+
+    return False
+
 def ajouter_style(match):
     # Récupère le groupe correspondant au style (ex: couleur texte / fond)
     style = match.group(1)
@@ -36,6 +54,12 @@ def ajouter_style(match):
     # Cas où seule une couleur de texte est définie
     else:
         couleur_texte = style
+    # Vérifie si les couleurs sont valides
+    if couleur_texte and not couleur_valide(couleur_texte):
+        raise ValueError(f"Couleur de texte invalide : {couleur_texte}")
+
+    if couleur_fond and not couleur_valide(couleur_fond):
+        raise ValueError(f"Couleur de fond invalide : {couleur_fond}")
 
     # Construction de la chaîne de style CSS inline
     style_html = ""
