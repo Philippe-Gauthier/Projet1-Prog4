@@ -1,97 +1,304 @@
+# 
 
-# TEST D'INTÉGRATION
+# \# TEST D'INTÉGRATION
 
-**contenu:**
+# 
 
-Slide::
+# \*\*contenu:\*\*
 
-## 1. Test Zach
+# 
 
-Ceci est un test de la fonction de Zach.
+# Slide::
 
-!! . 2
+# 
 
-Slide::
+# \## 1. Test Zach
 
-## 2. Test Amé
+# 
 
-Ceci est un test de la checklist.
+# Ceci est un test de la fonction de Zach.
 
-///Faire le code
-///Tester le programme
-///Faire la documentation
+# 
 
-Slide::
+# !! . 2
 
-## 3. Test Jay
+# 
 
-Ceci est un test du texte centré.
+# Slide::
 
-()
+# 
 
-Voici un texte qui devrait être centré.
+# \## 2. Test Amé
 
-()
+# 
 
-Slide::
+# Ceci est un test de la checklist.
 
-## 4. Test Antoine
+# 
 
-Ceci est un test des couleurs.
+# ///Faire le code
 
-{{red|Texte rouge}}
+# ///Tester le programme
 
-{{blue|Texte bleu}}
+# ///Faire la documentation
 
-{{=yellow|Texte avec un fond jaune}}
+# 
 
-{{red,=yellow|Texte rouge avec un fond jaune}}
+# Slide::
 
-Slide::
+# 
 
+# \## 3. Test Jay
 
+# 
 
-## 5. Test ensemble
+# Ceci est un test du texte centré.
 
-Cette slide teste les fonctions qui fonctionnent ensemble.
+# 
 
-Voici du {{red|texte rouge}} dans la même slide.
+# ()
 
-()
+# 
 
-Ce texte devrait être centré.
+# Voici un texte qui devrait être centré.
 
-()
+# 
 
-///Tâche 1
-///Tâche 2
-///Tâche 3
+# ()
 
-Voici encore du {{blue|texte bleu}}.
-Slide::
-## 6. Test Will
+# 
 
-@@@
-src: Libra.jpeg
-width: 500px
-height: 500px
-margin-left: 50px
-margin-top: 20px
-border-radius: 10px
-alt: texte alternatif ici
-@@@
+# Slide::
 
-Slide::
+# 
 
-@@@
-src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
-width: 400px
-height: 500px
-margin-left: 50px
-margin-top: 20px
-border-radius: 10px
-alt: texte alternatif ici
-@@@
+# \## 4. Test Antoine
+
+# 
+
+# Ceci est un test des couleurs.
+
+# 
+
+# {{red|Texte rouge}}
+
+# 
+
+# {{blue|Texte bleu}}
+
+# 
+
+# {{=yellow|Texte avec un fond jaune}}
+
+# 
+
+# {{red,=yellow|Texte rouge avec un fond jaune}}
+
+# 
+
+# Slide::
+
+# 
+
+# 
+
+# 
+
+# \## 5. Test ensemble
+
+# 
+
+# Cette slide teste les fonctions qui fonctionnent ensemble.
+
+# 
+
+# Voici du {{red|texte rouge}} dans la même slide.
+
+# 
+
+# ()
+
+# 
+
+# Ce texte devrait être centré.
+
+# 
+
+# ()
+
+# 
+
+# ///Tâche 1
+
+# ///Tâche 2
+
+# ///Tâche 3
+
+# 
+
+# Voici encore du {{blue|texte bleu}}.
+
+# Slide::
+
+# \## 6. Test Will
+
+# 
+
+# @@@
+
+# src: Libra.jpeg
+
+# width: 500px
+
+# height: 500px
+
+# margin-left: 50px
+
+# margin-top: 20px
+
+# border-radius: 10px
+
+# alt: texte alternatif ici
+
+# @@@
+
+# 
+
+# Slide::
+
+# 
+
+# @@@
+
+# src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
+
+# width: 400px
+
+# height: 500px
+
+# margin-left: 50px
+
+# margin-top: 20px
+
+# border-radius: 10px
+
+# alt: texte alternatif ici
+
+# @@@
+
+# 
+
+# <!-- SAID\_START -->
+
+# 
+
+# Slide::
+
+# 
+
+# \## 7. Test Said
+
+# 
+
+# \# Mon document
+
+# 
+
+# \## Introduction
+
+# 
+
+# Ceci est un texte normal.
+
+# 
+
+# \*\*Ceci est en gras.\*\*
+
+# 
+
+# \*Ceci est en italique\*
+
+# 
+
+# \*\*\*Ceci est en italique\*\*\*\*\*\*\&\*\*\*\*\*\*Gras\*\*\*\*\*\*.\*\*\*
+
+# 
+
+# \### Mon lien :
+
+# 
+
+# \[https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
+
+# 
+
+# \### Ma liste :
+
+# 
+
+# • Pomme
+
+# 
+
+# • Banane
+
+# 
+
+# • Orange
+
+# 
+
+# \### Ma liste numérotée :
+
+# 
+
+# 1\. Étape un
+
+# 
+
+# 2\. Étape deux
+
+# 
+
+# 3\. Étape trois
+
+# 
+
+# 4\. Étape quatre
+
+# 
+
+# Mon tableau :
+
+# 
+
+# | Dembele | Griezman | Ronaldo | Barcola |
+
+# | --- | --- | --- | --- |
+
+# | Vitinha | Veratti | Mazadona | Zaire-emery |
+
+# | Hakimi | mendes | marquinhos | Ramos |
+
+# 
+
+# \### Mon lien :
+
+# 
+
+# \[https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
+
+# 
+
+# \### Mon image :
+
+# 
+
+# !\[image1.jpeg](images/image1.jpeg)
+
+# 
+
+# <!-- SAID\_END -->
 
 
 
