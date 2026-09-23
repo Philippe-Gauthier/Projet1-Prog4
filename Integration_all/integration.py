@@ -105,19 +105,31 @@ def checklistMD(nomFichier):
 
 # Bruno
 
+# Bruno
 def convertir_diapositive(texte, fichier_html):
 
     # Découpe le texte en diapositives à partir du séparateur "Slide::"
     slides = texte.split("Slide::")
     # Chaîne qui accumulera le HTML final de toutes les diapositives
     resultat = ""
+    #Nombre de lignes MAX
+    MAX_LIGNES = 26
 
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
 
 
     # Parcourt chaque diapositive extraite du texte
-    for slide in slides:
+    for numero_slide, slide in enumerate(slides[1:], start=1):
+          # Compte le nombre de lignes dans la diapositive
+        nombre_lignes = len(slide.strip().splitlines())
+
+        #Gestion des avertissements 
+        if nombre_lignes > MAX_LIGNES:
+            print(f"AVERTISSEMENT : La diapositive {numero_slide} dépasse la limite de lignes.")
+            print(f"Nombre de lignes : {nombre_lignes}")
+            print(f"Limite permise : {MAX_LIGNES}")
+            print("Une scrollbar sera créée pour permettre de faire défiler le contenu.")
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
@@ -143,10 +155,10 @@ def convertir_diapositive(texte, fichier_html):
     </body>
     </html>
     """
-
-    # Écrit le CSS et le résultat final dans le fichier HTML de sortie
     with open(fichier_html, 'w', encoding='utf-8') as fout:
-        fout.write(css)
+            fout.write(css)
+
+
 
 
 #jay
