@@ -152,15 +152,21 @@ def convertir_diapositive(texte, fichier_html):
 #jay
 def CenterText(File):
     found = False
+    ERROR = False
     modified_lines = []
 
     for line in File.splitlines(keepends=True):
 
-        if line.lstrip().startswith("()") and not found:
+        if line.lstrip().startswith("()") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
             modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
             found = True
 
-        elif line.lstrip().startswith("()") and found:
+        elif line.lstrip().startswith("Slide::") and found: # Vérification si l'utilisateur ne tente de centrer une diapositive
+            found = False # Reset de la détection
+            ERROR = True # Mise en erreur du code et demande de correction
+            break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
+
+        elif line.lstrip().startswith("()") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
             modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
             found = False
 
@@ -169,6 +175,9 @@ def CenterText(File):
 
     if found:
         raise ValueError("Missing closing () for centered block")
+    
+    elif ERROR:
+        raise ValueError("Ne pas mettre de () autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n() \nSlide::\n()\n\n")
 
     return ''.join(modified_lines)
 
