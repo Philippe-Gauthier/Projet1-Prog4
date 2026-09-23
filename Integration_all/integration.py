@@ -3,14 +3,17 @@ import re
 from pathlib import Path
 from textwrap import dedent
 from mistletoe.block_token import Heading
-
+from docx import Document
+from docx.text.paragraph import Paragraph
+from docx.table import Table
+from docx.text.run import Run
+from docx.oxml.ns import qn
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
-# Fichier markdown source à lire
-FILE = "MD_integration.md"
-# Fichier HTML de sortie généré
-OUTPUT_FILE = "HTML_integration.html"
+DOSSIER = Path(__file__).resolve().parent
+FILE = DOSSIER / "MD_integration.md"
+OUTPUT_FILE = DOSSIER / "HTML_integration.html"
 
 # Antoine
 def ajouter_style(match):
@@ -534,7 +537,170 @@ def preprocess(text):
     # Reconstitue le texte final
     return "\n".join(output)
 
+# SAID 
+def preparer_markdown_depuis_word(chemin_word):
 
+    fichier_md = Path(FILE)
+    dossier_images = fichier_md.parent / "images"
+    dossier_images.mkdir(parents=True, exist_ok=True)
+    document = Document(chemin_word)
+
+    def convertir_run(element, paragraphe):
+        run = Run(element, paragraphe)
+        texte = run.text
+
+        if run.bold and run.italic:
+            texte = f"***{texte}***"
+        elif run.bold:
+            texte = f"**{texte}**"
+        elif run.italic:
+            texte = f"*{texte}*"
+
+        for image_xml in element.iter(qn("a:blip")):
+            relation_id = image_xml.get(qn("r:embed"))
+
+            if relation_id:
+                image = paragraphe.part.rels[relation_id].target_part
+                nom = Path(image.partname).name
+                (dossier_images / nom).write_bytes(image.blob)
+                texte += f"\n\n![{nom}](images/{nom})\n\n"
+
+        return texte
+
+    def convertir_paragraphe(paragraphe):
+        resultat = ""
+
+        for element in paragraphe._p:
+            if element.tag == qn("w:r"):
+                resultat += convertir_run(element, paragraphe)
+
+            elif element.tag == qn("w:hyperlink"):
+                texte = "".join(
+                    convertir_run(run, paragraphe)
+                    for run in element.findall(qn("w:r"))
+                )
+
+                relation_id = element.get(qn("r:id"))
+
+                if relation_id:
+                    url = paragraphe.part.rels[relation_id].target_ref
+                    resultat += f"[{texte}]({url})"
+                else:
+                    resultat += texte
+
+        return resultat
+
+    def convertir_tableau(tableau):
+        lignes = []
+
+        for numero, ligne in enumerate(tableau.rows):
+            cellules = []
+
+            for cellule in ligne.cells:
+                texte = " ".join(
+                    convertir_paragraphe(p).strip()
+                    for p in cellule.paragraphs
+                )
+
+                texte = texte.replace("|", "\\|")
+                texte = texte.replace("\n", "<br>")
+                cellules.append(texte)
+
+            lignes.append("| " + " | ".join(cellules) + " |")
+
+            if numero == 0:
+                lignes.append(
+                    "| " + " | ".join("---" for _ in cellules) + " |"
+                )
+
+        return "\n".join(lignes) + "\n\n"
+
+    markdown = ""
+    liste_en_cours = False
+
+    for element in document.element.body.iterchildren():
+
+        if element.tag == qn("w:p"):
+            paragraphe = Paragraph(element, document)
+            texte = convertir_paragraphe(paragraphe).strip()
+
+            if not texte:
+                continue
+
+            style = paragraphe.style.name
+
+            if style.startswith("Heading ") and style[8:].isdigit():
+                niveau = int(style[8:])
+
+                if 1 <= niveau <= 6:
+                    if liste_en_cours:
+                        markdown += "\n"
+
+                    markdown += "#" * niveau + " " + texte + "\n\n"
+                    liste_en_cours = False
+                    continue
+
+            if style.startswith("List Bullet"):
+                if not liste_en_cours and markdown and not markdown.endswith("\n\n"):
+                    markdown += "\n"
+
+                markdown += "- " + texte + "\n"
+                liste_en_cours = True
+
+            elif style.startswith("List Number"):
+                if not liste_en_cours and markdown and not markdown.endswith("\n\n"):
+                    markdown += "\n"
+
+                markdown += "1. " + texte + "\n"
+                liste_en_cours = True
+
+            else:
+                if liste_en_cours:
+                    markdown += "\n"
+
+                markdown += texte + "\n\n"
+                liste_en_cours = False
+
+        elif element.tag == qn("w:tbl"):
+            tableau = Table(element, document)
+            if liste_en_cours:
+                markdown += "\n"
+
+            markdown += convertir_tableau(tableau)
+            liste_en_cours = False
+
+    # Intégration sans effacer le Markdown des autres
+    debut = "<!-- SAID_START -->"
+    fin = "<!-- SAID_END -->"
+
+    bloc_said = (
+        f"{debut}\n\n"
+        f"Slide::\n\n"
+        f"## 7. Test Said\n\n"
+        f"{markdown.strip()}\n\n"
+        f"{fin}"
+    )
+
+    if fichier_md.exists():
+        contenu = fichier_md.read_text(encoding="utf-8")
+    else:
+        contenu = ""
+
+    if debut in contenu and fin in contenu:
+        position_debut = contenu.index(debut)
+        position_fin = contenu.index(fin) + len(fin)
+
+        contenu = (
+            contenu[:position_debut]
+            + bloc_said
+            + contenu[position_fin:]
+        )
+    else:
+        contenu = contenu.rstrip() + "\n\n" + bloc_said + "\n"
+
+    fichier_md.write_text(contenu, encoding="utf-8")
+
+    print("conversion Word vers Markdown terminée.")
 
 
 
@@ -634,4 +800,18 @@ def generer_html_depuis_markdown():
     # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
     convertir_diapositive(texte, OUTPUT_FILE)
 
-generer_html_depuis_markdown()
+if __name__ == "__main__":
+
+    fichier_word = DOSSIER / "test.docx"
+
+    if fichier_word.is_file():
+        preparer_markdown_depuis_word(fichier_word)
+    else:
+        print("Aucun document Word trouvé. Utilisation du Markdown existant.")
+
+    if FILE.is_file():
+        generer_html_depuis_markdown()
+    else:
+        print("Erreur : MD_integration.md est introuvable.")
+
+    generer_html_depuis_markdown()
