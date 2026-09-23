@@ -20,6 +20,7 @@ Ceci est un test de la checklist.
 ///Faire le code
 ///Tester le programme
 ///Faire la documentation
+**///test**
 
 Slide::
 
