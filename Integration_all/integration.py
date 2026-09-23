@@ -543,7 +543,6 @@ def preprocess(text):
 
 
 
-
 def generer_html_depuis_markdown():
     """
     Fonction principale qui exécute tout le pipeline de conversion :
