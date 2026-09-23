@@ -63,7 +63,7 @@
 }
 
 .slide {
-    background-color: rgb(100, 100, 100);
+    /* background-color: rgb(100, 100, 100); */
     width: 100vw;
     height: 70vh;
     margin-bottom: 30px;

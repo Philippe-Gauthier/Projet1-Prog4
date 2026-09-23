@@ -118,7 +118,6 @@ def convertir_diapositive(texte, fichier_html):
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
 
-
     # Parcourt chaque diapositive extraite du texte
     for numero_slide, slide in enumerate(slides[1:], start=1):
           # Compte le nombre de lignes dans la diapositive
@@ -137,13 +136,24 @@ def convertir_diapositive(texte, fichier_html):
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
         rendu = re.sub(r"\{\{([^|]+)\|(.+?)\}\}", ajouter_style, rendu)
+        if "???" in rendu:
+            slide_style = f'style="{rendu.strip().split("???")[1].split("???")[0].strip()}"'
+            print(f"Slide style detected: {slide_style}")
+        else:
+            slide_style = 'style="background-color: white;"'
+
+        ## we split the rendu from the shortcut ??slidebg: {color}?? and then we use strip to remove whitespace to get consistent results. if the shortcut is not found, we set it to white
+
+        rendu = re.sub(r"\?\?\?.+?\?\?\?", "", rendu).strip()
+        ## we take out the shortcut from the final rendu so that it doesnt show up as text
+        ## need to do \? because ? is a special char
 
         # Enveloppe le rendu HTML de la diapositive dans une div avec la classe "slide"
-        slide_html = '<div class="slide">' + rendu + '</div>'
+        slide_html = f'<div class="slide" {slide_style}>' + rendu + '</div>'
 
         # Ajoute la diapositive au résultat final
         resultat += slide_html
-    print(resultat)
+    #print(resultat)
     css = f"""<!DOCTYPE html>
     <html>
     <head>
