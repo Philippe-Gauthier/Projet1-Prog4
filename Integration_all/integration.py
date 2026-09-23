@@ -121,6 +121,9 @@ def convertir_diapositive(texte, fichier_html):
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
+        
+        # Ajout des id aux titres HTML
+        rendu = ajouter_id_titres(rendu)
 
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
@@ -174,6 +177,19 @@ def CenterText(File):
 
 
 #Nico
+
+def creer_lien(titre): 
+    # Mettre le titre en minuscules 
+    lien = titre.lower() 
+    
+    # Remplacer les espaces par des tirets 
+    lien = lien.replace(" ", "-") 
+    
+    # Enlever les caractères spéciaux 
+    lien = re.sub(r"[^a-z0-9\-]", "", lien)
+    
+    return lien
+
 def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
@@ -206,7 +222,7 @@ def creer_table_matiere(texte):
                         texteTitre += partieTitre.content
 
                 # Crée le lien d'ancre en remplaçant les espaces par des tirets
-                lienTitre = texteTitre.lower().replace(" ", "-")
+                lienTitre = creer_lien(texteTitre)
 
                 # Ajouter le titre dans la table
                 # L'indentation dépend du niveau du titre (##, ###, ####, etc.)
@@ -229,6 +245,27 @@ def creer_table_matiere(texte):
     New_texte = texte.replace("**contenu:**", tableMatieres, 1)
 
     return New_texte
+
+def ajouter_id_titres(html): 
+    """ Ajoute un id aux titres h2 à h6
+    pour permettre aux liens de la table des matières 
+    de fonctionner. 
+    """ 
+    
+    def remplacer_titre(match): 
+        
+        niveau = match.group(1)
+        titre = match.group(2)
+        
+        # Créer le même lien que dans la table des matières 
+        lien = creer_lien(titre)
+        
+        return f'<h{niveau} id="{lien}">{titre}</h{niveau}>' 
+    
+    # Chercher les titres h2 à h6 
+    html = re.sub( r'<h([2-6])>(.*?)</h\1>', remplacer_titre, html ) 
+    
+    return html
 
 # Zach
 def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
@@ -720,7 +757,12 @@ def generer_html_depuis_markdown():
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
     # une table des matières générée à partir des titres markdown (## à ######)
+       
     texte = creer_table_matiere(texte)
+    
+    
+    
+    
 
     
 
@@ -793,12 +835,18 @@ def generer_html_depuis_markdown():
     # Will : image
 
     texte = preprocess(texte)
+    
+   
+
 
     # Création du HTML final
     # Découpe le texte en diapositives ("Slide::"), convertit chacune en HTML,
     # applique les styles de couleur (Antoine), puis écrit le résultat
     # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
     convertir_diapositive(texte, OUTPUT_FILE)
+    
+    
+
 
 if __name__ == "__main__":
 
