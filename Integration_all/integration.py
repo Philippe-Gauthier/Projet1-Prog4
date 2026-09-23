@@ -3,14 +3,22 @@ import re
 from pathlib import Path
 from textwrap import dedent
 from mistletoe.block_token import Heading
+from docx import Document
+from docx.text.paragraph import Paragraph
+from docx.table import Table
+from docx.text.run import Run
+from docx.oxml.ns import qn
 
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
 # Fichier markdown source à lire
-FILE = "MD_integration.md"
+#FILE = "MD_integration.md"
 # Fichier HTML de sortie généré
-OUTPUT_FILE = "HTML_integration.html"
+#OUTPUT_FILE = "HTML_integration.html"
+DOSSIER = Path(__file__).resolve().parent
+FILE = DOSSIER / "MD_integration.md"
+OUTPUT_FILE = DOSSIER / "HTML_integration.html"
 
 # Antoine
 def ajouter_style(match):
@@ -537,106 +545,7 @@ def preprocess(text):
     # Reconstitue le texte final
     return "\n".join(output)
 
-
-
-
-def generer_html_depuis_markdown():
-    """
-    Fonction principale qui exécute tout le pipeline de conversion :
-    lecture du fichier markdown, application de toutes les transformations
-    (table des matières, arbre de fichiers, checklist, texte centré),
-    puis génération du fichier HTML final.
-    """
-
-    # Lecture du fichier Markdown
-    # Ouvre le fichier source(.md) (FILE) en lecture et récupère tout son contenu
-    with open(FILE, "r", encoding="utf-8") as fichier:
-        texte = fichier.read()
-
-    # Nico : table des matières
-    # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
-    # une table des matières générée à partir des titres markdown (## à ######)
-    texte = creer_table_matiere(texte)
-
-    
-
-    # Zach : arbre de fichiers
-    # Découpe le texte en lignes (en conservant les sauts de ligne)
-    lignes = texte.splitlines(keepends=True)
-    lignesModifiees = []
-
-    # Parcourt chaque ligne du texte
-    for ligne in lignes:
-        # Si la ligne commence par le raccourci défini (SHORTCUT, ex: "!!")
-        # c'est une demande de génération d'arbre de fichiers
-        if ligne.startswith(SHORTCUT):
-            # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
-            parameters = ligne[len(SHORTCUT):].strip().split(' ')
-            # Le premier paramètre est le chemin du dossier à explorer
-            path = parameters[0]
-
-            # Tente de récupérer la profondeur maximale en 2e paramètre
-            # Si absent ou invalide, utilise une profondeur par défaut de 1
-            try:
-                depth = int(parameters[1])
-            except (IndexError, ValueError):
-                depth = 1
-
-            # Construit la structure de données de l'arborescence (dict/list/str)
-            tree_data = build_tree(path, depth)
-            # Convertit cette structure en bloc HTML (div + liste)
-            html_tree = render_tree_block(tree_data)
-
-            # Remplace la ligne du raccourci par le HTML généré
-            lignesModifiees.append(html_tree + "\n")
-
-        else:
-            # Ligne normale : conservée telle quelle
-            lignesModifiees.append(ligne)
-
-    # Reconstitue le texte complet avec les arbres de fichiers insérés
-    texte = "".join(lignesModifiees)
-
-    # Amé : checklist
-    # Découpe à nouveau le texte (mis à jour) en lignes
-    lignes = texte.splitlines(keepends=True)
-    lignesModifiees = []
-
-    # Parcourt chaque ligne du texte
-    for ligne in lignes:
-        # Si la ligne commence par "///" -> c'est un élément de checklist
-        if ligne.startswith("///"):
-            # Récupère le texte de la checklist (après "///", sans espaces superflus)
-            texteChecklist = ligne[3:].strip()
-            # Remplace la ligne par une checkbox HTML avec son label
-            lignesModifiees.append(
-                '<input type="checkbox"> <label>' +
-                texteChecklist +
-                '</label><br>\n'
-            )
-        else:
-            # Ligne normale : conservée telle quelle
-            lignesModifiees.append(ligne)
-
-    # Reconstitue le texte complet avec les checklists converties en HTML
-    texte = "".join(lignesModifiees)
-
-    # Jay : texte centré
-    # Recherche les paires de "()" dans le texte pour ouvrir/fermer
-    # des blocs <div align="center"> autour du contenu concerné
-    texte = CenterText(texte)
-
-    # Will : image
-
-    texte = preprocess(texte)
-
-    # Création du HTML final
-    # Découpe le texte en diapositives ("Slide::"), convertit chacune en HTML,
-    # applique les styles de couleur (Antoine), puis écrit le résultat
-    # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
-    convertir_diapositive(texte, OUTPUT_FILE)
-
-    # SAID 
+# SAID 
 def preparer_markdown_depuis_word(chemin_word):
 
     fichier_md = Path(FILE)
@@ -815,5 +724,106 @@ def preparer_markdown_depuis_word(chemin_word):
 
     print("conversion Word vers Markdown terminée.")
 
-    # Appel de la fonction principale
+
+def generer_html_depuis_markdown():
+    """
+    Fonction principale qui exécute tout le pipeline de conversion :
+    lecture du fichier markdown, application de toutes les transformations
+    (table des matières, arbre de fichiers, checklist, texte centré),
+    puis génération du fichier HTML final.
+    """
+
+    # Lecture du fichier Markdown
+    # Ouvre le fichier source(.md) (FILE) en lecture et récupère tout son contenu
+    with open(FILE, "r", encoding="utf-8") as fichier:
+        texte = fichier.read()
+
+    # Nico : table des matières
+    # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
+    # une table des matières générée à partir des titres markdown (## à ######)
+    texte = creer_table_matiere(texte)
+
+    
+
+    # Zach : arbre de fichiers
+    # Découpe le texte en lignes (en conservant les sauts de ligne)
+    lignes = texte.splitlines(keepends=True)
+    lignesModifiees = []
+
+    # Parcourt chaque ligne du texte
+    for ligne in lignes:
+        # Si la ligne commence par le raccourci défini (SHORTCUT, ex: "!!")
+        # c'est une demande de génération d'arbre de fichiers
+        if ligne.startswith(SHORTCUT):
+            # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
+            parameters = ligne[len(SHORTCUT):].strip().split(' ')
+            # Le premier paramètre est le chemin du dossier à explorer
+            path = parameters[0]
+
+            # Tente de récupérer la profondeur maximale en 2e paramètre
+            # Si absent ou invalide, utilise une profondeur par défaut de 1
+            try:
+                depth = int(parameters[1])
+            except (IndexError, ValueError):
+                depth = 1
+
+            # Construit la structure de données de l'arborescence (dict/list/str)
+            tree_data = build_tree(path, depth)
+            # Convertit cette structure en bloc HTML (div + liste)
+            html_tree = render_tree_block(tree_data)
+
+            # Remplace la ligne du raccourci par le HTML généré
+            lignesModifiees.append(html_tree + "\n")
+
+        else:
+            # Ligne normale : conservée telle quelle
+            lignesModifiees.append(ligne)
+
+    # Reconstitue le texte complet avec les arbres de fichiers insérés
+    texte = "".join(lignesModifiees)
+
+    # Amé : checklist
+    # Découpe à nouveau le texte (mis à jour) en lignes
+    lignes = texte.splitlines(keepends=True)
+    lignesModifiees = []
+
+    # Parcourt chaque ligne du texte
+    for ligne in lignes:
+        # Si la ligne commence par "///" -> c'est un élément de checklist
+        if ligne.startswith("///"):
+            # Récupère le texte de la checklist (après "///", sans espaces superflus)
+            texteChecklist = ligne[3:].strip()
+            # Remplace la ligne par une checkbox HTML avec son label
+            lignesModifiees.append(
+                '<input type="checkbox"> <label>' +
+                texteChecklist +
+                '</label><br>\n'
+            )
+        else:
+            # Ligne normale : conservée telle quelle
+            lignesModifiees.append(ligne)
+
+    # Reconstitue le texte complet avec les checklists converties en HTML
+    texte = "".join(lignesModifiees)
+
+    # Jay : texte centré
+    # Recherche les paires de "()" dans le texte pour ouvrir/fermer
+    # des blocs <div align="center"> autour du contenu concerné
+    texte = CenterText(texte)
+
+    # Will : image
+
+    texte = preprocess(texte)
+
+    # Création du HTML final
+    # Découpe le texte en diapositives ("Slide::"), convertit chacune en HTML,
+    # applique les styles de couleur (Antoine), puis écrit le résultat
+    # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
+    convertir_diapositive(texte, OUTPUT_FILE)
+
+
+if __name__ == "__main__":
+    fichier_word = DOSSIER / "test.docx"
+
+    preparer_markdown_depuis_word(fichier_word)
     generer_html_depuis_markdown()
