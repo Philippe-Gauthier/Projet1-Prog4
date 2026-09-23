@@ -68,17 +68,18 @@ def checklistMD(nomFichier):
             # Liste temporaire des caractères/éléments pour construire la ligne modifiée
             modifiedLine = []
 
-            # Vérifie si la ligne est une ligne de checklist (commence par '///')
-            if  line.find('///') != -1:
-                positionLine = 0
-                # Parcourt chaque caractère de la ligne après les 3 premiers caractères ('///')
+            # Vérifie si la ligne est une ligne de checklist (contient '+' ou '=')
+            if  (line.find('+') != -1) or (line.find('=') != -1):
+                # Parcourt chaque caractère de la ligne
                 for letter in line:
-                    if ("".join(line[positionLine:positionLine + 2])) == "///":
+                    if letter == "+":
                         # Insère la balise HTML de la checkbox et le label au début de la ligne
                         modifiedLine.append('<input type="checkbox"> <label>')
-                    elif letter != "/":
+                    elif letter == "=":
+                        # Insère la balise HTML de la checkbox et le label au début de la ligne
+                        modifiedLine.append('<input type="checkbox" checked> <label>')
+                    else:
                         modifiedLine.append(letter)
-                    positionLine += 1
 
                 # Si la ligne se termine par un saut de ligne, remplace le dernier élément
                 # par la fermeture du label suivie du saut de ligne
