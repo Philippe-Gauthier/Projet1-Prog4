@@ -33,7 +33,15 @@ Voici un texte qui devrait être centré.
 
 ()
 
+()
+This is a () test
+()
+
+This text should not be centered
+
+
 Slide::
+
 
 ## 4. Test Antoine
 

@@ -144,33 +144,27 @@ def convertir_diapositive(texte, fichier_html):
 
 
 #jay
-def CenterText(md_content):
-    found = False  # Variable pour savoir si on est dans une zone centrée
+def CenterText(File):
+    found = False
+    modified_lines = []
 
-    # Découpe le contenu markdown en une liste de lignes
-    lines = md_content.splitlines('\n')
+    for line in File.splitlines(keepends=True):
 
-    modified_lines = []  # Garde les lignes après modification
+        if line.lstrip().startswith("()") and not found:
+            modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
+            found = True
 
-    # Parcourt chaque ligne du contenu
-    for Symbol in lines:
-        Shortcut = '()'  # Recherche du motif à remplacer
+        elif line.lstrip().startswith("()") and found:
+            modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
+            found = False
 
-        # Si le motif est trouvé et qu'on n'est pas encore dans une zone centrée
-        # -> on ouvre la zone centrée
-        if Symbol.find(Shortcut) != -1 and (found == False):
-            Symbol = Symbol.replace(Shortcut,'<div align="center">\n',1)
-            found = True  # On est maintenant dans une zone centrée
+        else:
+            modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
-        # Si le motif est trouvé et qu'on est déjà dans une zone centrée
-        # -> on ferme la zone centrée
-        elif Symbol.find(Shortcut) != -1 and (found == True):
-            Symbol = Symbol.replace(Shortcut,'</div>\n',1)
-            found = False  # On sort de la zone centrée
+    if found:
+        raise ValueError("Missing closing () for centered block")
 
-        modified_lines.append(Symbol)  # Ajoute la ligne modifiée
-
-    return '\n'.join(modified_lines)  # Retourne le texte complet
+    return ''.join(modified_lines)
 
 
 #Nico
