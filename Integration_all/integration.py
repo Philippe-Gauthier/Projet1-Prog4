@@ -126,6 +126,7 @@ def convertir_diapositive(texte, fichier_html):
         # Ajoute la diapositive au résultat final
         resultat += slide_html
     print(resultat)
+
     css = f"""<!DOCTYPE html>
     <html>
     <head>
@@ -232,6 +233,7 @@ def creer_table_matiere(texte):
 
 # Zach
 def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
+
     """
     Reads a folder and builds a tree consisting of all the files at a certain depth.
     """
@@ -253,24 +255,28 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # Si on a atteint la profondeur maximale, retourne uniquement la liste des noms
     # des fichiers/dossiers à ce niveau (en ignorant les fichiers cachés)
     if current_depth == max_depth:
-        return [f.name for f in path.iterdir() if not f.name.startswith('.')]
-
+        try : 
+            return [f.name for f in path.iterdir() if not f.name.startswith('.')]
+        except PermissionError:
+            return ""
     # Dictionnaire qui représentera l'arborescence à ce niveau
     tree = {}
 
     # Parcourt chaque élément (fichier ou dossier) du chemin courant
-    for item in path.iterdir():
-        # Ignore les fichiers/dossiers cachés
-        if item.name.startswith('.'):
-            continue
+    try:
+        for item in path.iterdir():
+            # Ignore les fichiers/dossiers cachés
+            if item.name.startswith('.'):
+                continue
 
-        if item.is_dir():
-            # Appel récursif pour construire l'arborescence des sous-dossiers
-            tree[item.name] = build_tree(item, max_depth, current_depth + 1)
-        else:
-            # Pour un fichier, on stocke simplement son nom
-            tree[item.name] = item.name
-
+            if item.is_dir():
+                # Appel récursif pour construire l'arborescence des sous-dossiers
+                tree[item.name] = build_tree(item, max_depth, current_depth + 1)
+            else:
+                # Pour un fichier, on stocke simplement son nom
+                tree[item.name] = item.name
+    except PermissionError:
+        return tree
     return tree
 
 
