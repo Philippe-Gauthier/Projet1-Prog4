@@ -17,9 +17,9 @@ Slide::
 
 Ceci est un test de la checklist.
 
-///Faire le code
-///Tester le programme
-///Faire la documentation
+=Faire le code
++Tester le programme
++Faire la documentation
 
 Slide::
 
@@ -33,7 +33,15 @@ Voici un texte qui devrait être centré.
 
 ()
 
+()
+This is a () test
+()
+
+This text should not be centered
+
+()
 Slide::
+()
 
 ## 4. Test Antoine
 
