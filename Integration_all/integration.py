@@ -870,7 +870,7 @@ def generer_html_depuis_markdown():
 
 
         # Détection de la commande de centrage d'arbre (
-        )
+        
         if ligne.lstrip().startswith("(Centered_Tree)"):
 
             # Centrage du prochain arbre de fichiers généré
@@ -886,6 +886,7 @@ def generer_html_depuis_markdown():
             real_param={}
             for param in parameters:
                 x = param.strip().split('=')
+                print(x)
                 real_param[x[0]] = x[1]
             
             # Le premier paramètre est le chemin du dossier à explorer

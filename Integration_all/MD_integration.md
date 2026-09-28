@@ -8,9 +8,10 @@ Slide::
 
 Ceci est un test de la fonction de Zach.
 
-!! path=.,depth=2,blacklist=[".*","~$*"]!!
+(Centered_Tree)
+!! path=.;depth=2 ;blacklist=[".*","~$*"] !!
 
-!! c:\ 2
+
 
 Slide::
 
