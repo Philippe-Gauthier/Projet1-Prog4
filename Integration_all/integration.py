@@ -208,10 +208,10 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing (MD) for centered block")
+        raise ValueError("(MD) manquant dans la dernière slide")
     
     elif ERROR:
-        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
+        raise ValueError("Vérifiez la syntaxe de vos blocs centrés, un (MD) a été ouvert mais pas fermé avant une diapositive. \n\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n\n")
 
     return ''.join(modified_lines)
 
