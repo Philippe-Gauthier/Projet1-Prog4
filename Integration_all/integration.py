@@ -858,7 +858,7 @@ def generer_html_depuis_markdown():
 
 
         # Détection de la commande de centrage d'arbre (TREE)
-        if ligne.lstrip().startswith("(TREE)"):
+        if ligne.lstrip().startswith("(Centered_Tree)"):
 
             # Centrage du prochain arbre de fichiers généré
             centrer_arbre = True

@@ -7,7 +7,7 @@ Slide::
 ## 1. Test Zach
 
 Ceci est un test de la fonction de Zach.
-(TREE)
+(Centered_Tree)
 !! . 2
 
 !! c:\ 2
