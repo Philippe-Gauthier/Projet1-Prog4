@@ -5,6 +5,11 @@
     line-height: 1.8;
 }
 
+.file-tree.centered-tree {
+    width: fit-content;
+    margin: 0 auto;
+}
+
 /* Reset and indent nested folders */
 .file-tree ul {
     list-style-type: none;

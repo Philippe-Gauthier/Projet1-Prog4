@@ -20,17 +20,17 @@ Ceci est un test de la checklist.
 +Tester le programme
 +Faire la documentation
 
-Slide::
+# !! . 2
 
-## 3. Test Jay
+# 
 
-Ceci est un test du texte centré.
+# Slide::
 
-()
+# 
 
-Voici un texte qui devrait être centré.
+# \## 2. Test Amé
 
-()
+# 
 
 ()
 This is a () test
@@ -40,74 +40,198 @@ This text should not be centered
 
 Slide::
 
-## 4. Test Antoine
+# 
 
-Ceci est un test des couleurs.
+# ///Faire le code
 
-{{red|Texte rouge}}
+# ///Tester le programme
 
 {{#FF0000|Texte rouge en hexadécimal}}
 
 {{blue,=#FFFF00|Texte bleu avec fond jaune}}
 
-{{blue|Texte bleu}}
+***Ceci est en italique******&******Gras******.***
 
-{{=yellow|Texte avec un fond jaune}}
+# 
 
-{{red,=yellow|Texte rouge avec un fond jaune}}
+# Slide::
 
-Slide::
+# 
 
-## 5. Test ensemble
+# \## 3. Test Jay
 
-???background-color: yellow; color: white???
+# 
 
-Cette slide teste les fonctions qui fonctionnent ensemble.
+# Ceci est un test du texte centré.
 
-Voici du {{red|texte rouge}} dans la même slide.
+# 
 
-()
+# ()
 
-Ce texte devrait être centré.
+# 
 
-()
+# Voici un texte qui devrait être centré.
 
-///Tâche 1
-///Tâche 2
-///Tâche 3
+# 
 
-Voici encore du {{blue|texte bleu}}.
-Slide::
+# ()
 
-## 6. Test Will
+# 
 
-@@@
-src: Libra.jpeg
-width: 500px
-height: 500px
-margin-left: 50px
-margin-top: 20px
-border-radius: 10px
-alt: texte alternatif ici
-@@@
+# Slide::
 
-Slide::
+# 
 
-@@@
-src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
-width: 400px
-height: 500px
-margin-left: 50px
-margin-top: 20px
-border-radius: 10px
-alt: texte alternatif ici
-@@@
+# \## 4. Test Antoine
+
+# 
+
+# Ceci est un test des couleurs.
+
+# 
+
+# {{red|Texte rouge}}
+
+# 
+
+# {{blue|Texte bleu}}
+
+# 
+
+# {{=yellow|Texte avec un fond jaune}}
+
+# 
+
+# {{red,=yellow|Texte rouge avec un fond jaune}}
+
+# 
+
+# Slide::
+
+# 
+
+# 
+
+# 
+
+# \## 5. Test ensemble
+
+# 
+
+# Cette slide teste les fonctions qui fonctionnent ensemble.
+
+# 
+
+# Voici du {{red|texte rouge}} dans la même slide.
+
+# 
+
+# ()
+
+# 
+
+# Ce texte devrait être centré.
+
+# 
+
+# ()
+
+# 
+
+# ///Tâche 1
+
+# ///Tâche 2
+
+# ///Tâche 3
+
+# 
+
+# Voici encore du {{blue|texte bleu}}.
+
+# Slide::
+
+# \## 6. Test Will
+
+# 
+
+# @@@
+
+# src: Libra.jpeg
+
+# width: 500px
+
+# height: 500px
+
+# margin-left: 50px
+
+# margin-top: 20px
+
+# border-radius: 10px
+
+# alt: texte alternatif ici
+
+# @@@
+
+# 
+
+# Slide::
+
+# 
+
+# @@@
+
+# src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
+
+# width: 400px
+
+# height: 500px
+
+# margin-left: 50px
+
+# margin-top: 20px
+
+# border-radius: 10px
+
+# alt: texte alternatif ici
+
+# @@@
+
+# 
+
 
 <!-- SAID_START -->
 
-Slide::
-
 ## 7. Test Said
+
+# Mon document
+
+## Introduction
+
+Ceci est un texte normal.
+
+**Ceci est en gras.**
+
+*Ceci est en italique*
+
+***Ceci est en ******italique******&******Gras******.***
+
+### Ma liste :
+
+• Pomme
+
+• Banane
+
+• Orange
+
+### Ma liste numérotée :
+
+1. Étape un
+
+2. Étape deux
+
+3. Étape trois
+
+4. Étape quatre
 
 Mon tableau :
 

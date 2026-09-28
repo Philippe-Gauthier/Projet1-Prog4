@@ -8,14 +8,7 @@ from docx.text.paragraph import Paragraph
 from docx.table import Table
 from docx.text.run import Run
 from docx.oxml.ns import qn
-
-
-# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
-SHORTCUT = "!!"
-# Fichier markdown source à lire
-#FILE = "MD_integration.md"
-# Fichier HTML de sortie généré
-#OUTPUT_FILE = "HTML_integration.html"
+import ast
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
@@ -178,7 +171,7 @@ def convertir_diapositive(texte, fichier_html):
 
         # Ajoute la diapositive au résultat final
         resultat += slide_html
-    print(resultat)
+
 
     css = f"""<!DOCTYPE html>
     <html>
@@ -205,7 +198,7 @@ def CenterText(File):
 
     for line in File.splitlines(keepends=True):
 
-        if line.lstrip().startswith("()") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
+        if line.lstrip().startswith("(MD)") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
             modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
             found = True
 
@@ -214,7 +207,7 @@ def CenterText(File):
             ERROR = True # Mise en erreur du code et demande de correction
             break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
 
-        elif line.lstrip().startswith("()") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
+        elif line.lstrip().startswith("(MD)") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
             modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
             found = False
 
@@ -222,10 +215,10 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing () for centered block")
+        raise ValueError("Missing closing (MD) for centered block")
     
     elif ERROR:
-        raise ValueError("Ne pas mettre de () autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n() \nSlide::\n()\n\n")
+        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
 
     return ''.join(modified_lines)
 
@@ -322,8 +315,7 @@ def ajouter_id_titres(html):
     return html
 
 # Zach
-def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
-
+def build_tree(path: str, max_depth,blacklist, current_depth=1, ) -> dict | list | str:
     """
     Reads a folder and builds a tree consisting of all the files at a certain depth.
     """
@@ -346,7 +338,18 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # des fichiers/dossiers à ce niveau (en ignorant les fichiers cachés)
     if current_depth == max_depth:
         try : 
-            return [f.name for f in path.iterdir() if not f.name.startswith('.')]
+            list = []
+            for item in path.iterdir():
+                for name in blacklist:
+                    if name.endswith("*"):
+                        if item.name.startswith(name[:-1]):
+                            break
+                    elif item.name == name:
+                        break
+                else:
+                    list.append(item.name)
+                    
+            return list
         except PermissionError:
             return ""
     # Dictionnaire qui représentera l'arborescence à ce niveau
@@ -355,19 +358,21 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # Parcourt chaque élément (fichier ou dossier) du chemin courant
     try:
         for item in path.iterdir():
-            # Ignore les fichiers/dossiers cachés
-            if item.name.startswith('.'):
-                continue
-
-            if item.is_dir():
-                # Appel récursif pour construire l'arborescence des sous-dossiers
-                tree[item.name] = build_tree(item, max_depth, current_depth + 1)
+            for name in blacklist:
+                if name.endswith("*"):
+                    if item.name.startswith(name[:-1]):
+                        break
+                elif item.name == name:
+                    break
             else:
-                # Pour un fichier, on stocke simplement son nom
-                tree[item.name] = item.name
+                
+                if item.is_dir():
+                    tree[item.name] = build_tree(item, max_depth, blacklist, current_depth + 1)
+                else:
+                    tree[item.name] = item.name
     except PermissionError:
         return tree
-    return tree
+    return tree   
 
 
 def build_html(tree: dict | list | str) -> str:
@@ -825,6 +830,12 @@ def generer_html_depuis_markdown():
     with open(FILE, "r", encoding="utf-8") as fichier:
         texte = fichier.read()
 
+    if not texte.strip():
+        print("Erreur : le fichier Markdown est vide.")
+        return
+
+    texte = creer_table_matiere(texte)
+
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
     # une table des matières générée à partir des titres markdown (## à ######)
@@ -842,32 +853,71 @@ def generer_html_depuis_markdown():
     lignes = texte.splitlines(keepends=True)
     lignesModifiees = []
 
+    # Indique si le prochain arbre doit être centré
+    centrer_arbre = False
+
     # Parcourt chaque ligne du texte
     for ligne in lignes:
-        # Si la ligne commence par le raccourci défini (SHORTCUT, ex: "!!")
-        # c'est une demande de génération d'arbre de fichiers
-        if ligne.startswith(SHORTCUT):
+
+
+        # Détection de la commande de centrage d'arbre (
+        
+        if ligne.lstrip().startswith("(Centered_Tree)"):
+
+            # Centrage du prochain arbre de fichiers généré
+            centrer_arbre = True
+
+            # On ne conserve pas (TREE) dans le Markdown final
+            continue
+
+        # Détection du raccourci !! pour créer un arbre
+        if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT+"\n"):
             # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
-            parameters = ligne[len(SHORTCUT):].strip().split(' ')
+            parameters = ligne[len(SHORTCUT):len(ligne)-len(SHORTCUT)-1].strip().split(';')
+            real_param={}
+            for param in parameters:
+                x = param.strip().split('=')
+                print(x)
+                real_param[x[0]] = x[1]
+            
             # Le premier paramètre est le chemin du dossier à explorer
             path = parameters[0]
 
-            # Tente de récupérer la profondeur maximale en 2e paramètre
-            # Si absent ou invalide, utilise une profondeur par défaut de 1
+            # Tente de récupérer la profondeur maximale
+            # Si absente ou invalide, utilise 1
             try:
-                depth = int(parameters[1])
+                path = real_param["path"]
+            except:
+                path = "."
+
+            try:
+                depth = int(real_param["depth"])
             except (IndexError, ValueError):
                 depth = 1
 
-            # Construit la structure de données de l'arborescence (dict/list/str)
-            tree_data = build_tree(path, depth)
+            try:
+                blacklist = ast.literal_eval((real_param["blacklist"]))
+            except:
+                print("Erreur de lecture de la blacklist d'un arbre")
+                blacklist = []
+
+            tree_data = build_tree(path, depth,blacklist)
             # Convertit cette structure en bloc HTML (div + liste)
             html_tree = render_tree_block(tree_data)
+
+
+            # Si (TREE) est détecté avant le shortcut !!, on centre l'arbre dans le HTML final
+            if centrer_arbre:
+                html_tree = html_tree.replace('<div class="file-tree">','<div class="file-tree centered-tree">')
+
+                # Reset : le prochain arbre ne sera pas centré par défaut
+                centrer_arbre = False
 
             # Remplace la ligne du raccourci par le HTML généré
             lignesModifiees.append(html_tree + "\n")
 
         else:
+
             # Ligne normale : conservée telle quelle
             lignesModifiees.append(ligne)
 
@@ -911,5 +961,3 @@ if __name__ == "__main__":
         generer_html_depuis_markdown()
     else:
         print("Erreur : MD_integration.md est introuvable.")
-
-    generer_html_depuis_markdown()
