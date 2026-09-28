@@ -965,5 +965,3 @@ if __name__ == "__main__":
         generer_html_depuis_markdown()
     else:
         print("Erreur : MD_integration.md est introuvable.")
-
-    generer_html_depuis_markdown()
