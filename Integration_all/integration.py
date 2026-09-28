@@ -86,13 +86,13 @@ def checklistMD(texte):
         modifiedLine = []
 
         # Vérifie si la ligne est une ligne de checklist (contient '+' ou '&')
-        if  (line.find('+') != -1) or (line.find('&') != -1):
+        if  (line.find(' ///') != -1) or (line.find('\\') != -1):
             # Parcourt chaque caractère de la ligne
             for letter in line:
-                if letter == "+":
+                if letter == "///":
                     # Insère la balise HTML de la checkbox et le label au début de la ligne
                     modifiedLine.append('<input type="checkbox"> <label>')
-                elif letter == "&":
+                elif letter == "\\":
                     # Insère la balise HTML de la checkbox et le label au début de la ligne
                     modifiedLine.append('<input type="checkbox" checked> <label>')
                 else:
