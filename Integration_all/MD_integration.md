@@ -48,7 +48,7 @@ Slide::
 
 {{#FF0000 |Texte rouge en hexadécimal}}
 
-{{blue,=#FFFF00|Texte bleu avec fond jaune}}
+{{blue,=#FFFF00|Texte bleu avec fond jauneeS}}
 
 ***Ceci est en italique******&******Gras******.***
 
@@ -90,11 +90,11 @@ Slide::
 
 # 
 
-# {{red|Texte rouge}}
+# {{reed|Texte rouge}}
 
 # 
 
-# {{blue|Texte bleu}}
+# {{bluee |Texte bleu}}
 
 # 
 
