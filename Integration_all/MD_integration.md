@@ -1,6 +1,4 @@
-# 
-
-# \# TEST D'INTÉGRATION
+# TEST D'INTÉGRATION
 
 # 
 
@@ -18,7 +16,9 @@
 
 # Ceci est un test de la fonction de Zach.
 
-# 
+=Faire le code
++Tester le programme
++Faire la documentation
 
 # !! . 2
 
@@ -32,7 +32,13 @@
 
 # 
 
-# Ceci est un test de la checklist.
+()
+This is a () test
+()
+
+This text should not be centered
+
+Slide::
 
 # 
 
@@ -40,7 +46,11 @@
 
 # ///Tester le programme
 
-# ///Faire la documentation
+{{#FF0000|Texte rouge en hexadécimal}}
+
+{{blue,=#FFFF00|Texte bleu avec fond jaune}}
+
+{{blue|Texte bleu}}
 
 # 
 
@@ -300,5 +310,25 @@
 
 # <!-- SAID\_END -->
 
+<!-- SAID_START -->
 
+Slide::
 
+## 7. Test Said
+
+Mon tableau :
+
+| Dembele | Griezman | Ronaldo | Barcola |
+| --- | --- | --- | --- |
+| Vitinha | Veratti | Mazadona | Zaire-emery |
+| Hakimi | mendes | marquinhos | Ramos |
+
+### Mon lien :
+
+[https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
+
+### Mon image :
+
+![image1.jpg](images/image1.jpg)
+
+<!-- SAID_END -->
