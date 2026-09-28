@@ -7,10 +7,11 @@ Slide::
 ## 1. Test Zach
 
 Ceci est un test de la fonction de Zach.
-(Centered_Tree)
-!! . 2
 
-!! c:\ 2
+(Centered_Tree)
+!! path=.;depth=2 ;blacklist=[".*","~$*"] !!
+
+
 
 Slide::
 
