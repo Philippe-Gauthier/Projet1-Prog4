@@ -12,13 +12,6 @@ import ast
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
-# Fichier markdown source à lire
-#FILE = "MD_integration.md"
-# Fichier HTML de sortie généré
-#OUTPUT_FILE = "HTML_integration.html"
-
-# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
-SHORTCUT = "!!"
 DOSSIER = Path(__file__).resolve().parent
 FILE = DOSSIER / "MD_integration.md"
 OUTPUT_FILE = DOSSIER / "HTML_integration.html"
@@ -844,6 +837,12 @@ def generer_html_depuis_markdown():
     # Ouvre le fichier source(.md) (FILE) en lecture et récupère tout son contenu
     with open(FILE, "r", encoding="utf-8") as fichier:
         texte = fichier.read()
+
+    if not texte.strip():
+        print("Erreur : le fichier Markdown est vide.")
+        return
+
+    texte = creer_table_matiere(texte)
 
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
