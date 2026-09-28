@@ -99,7 +99,7 @@ def checklistMD(texte):
         # Liste temporaire des caractères/éléments pour construire la ligne modifiée
         modifiedLine = []
 
-        # Vérifie si la ligne est une ligne de checklist (contient '+' ou '=')
+        # Vérifie si la ligne est une ligne de checklist (contient '+' ou '&')
         if  (line.find('+') != -1) or (line.find('&') != -1):
             # Parcourt chaque caractère de la ligne
             for letter in line:
