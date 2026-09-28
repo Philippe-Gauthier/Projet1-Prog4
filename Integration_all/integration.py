@@ -12,16 +12,6 @@ from docx.oxml.ns import qn
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
-# Fichier markdown source à lire
-#FILE = "MD_integration.md"
-# Fichier HTML de sortie généré
-#OUTPUT_FILE = "HTML_integration.html"
-<<<<<<< Updated upstream
-
-# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
-SHORTCUT = "!!"
-=======
->>>>>>> Stashed changes
 DOSSIER = Path(__file__).resolve().parent
 FILE = DOSSIER / "MD_integration.md"
 OUTPUT_FILE = DOSSIER / "HTML_integration.html"
@@ -937,7 +927,6 @@ def generer_html_depuis_markdown():
 
 
 if __name__ == "__main__":
-<<<<<<< Updated upstream
 
     fichier_word = DOSSIER / "test.docx"
 
@@ -951,10 +940,3 @@ if __name__ == "__main__":
     else:
         print("Erreur : MD_integration.md est introuvable.")
 
-    generer_html_depuis_markdown()
-=======
-    fichier_word = DOSSIER / "test.docx"
-
-    preparer_markdown_depuis_word(fichier_word)
-    generer_html_depuis_markdown()
->>>>>>> Stashed changes
