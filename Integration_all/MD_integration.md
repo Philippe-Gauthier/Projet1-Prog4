@@ -1,4 +1,3 @@
-
 # TEST D'INTÉGRATION
 
 **contenu:**
@@ -39,9 +38,7 @@ This is a () test
 
 This text should not be centered
 
-()
 Slide::
-()
 
 ## 4. Test Antoine
 
@@ -57,9 +54,9 @@ Ceci est un test des couleurs.
 
 Slide::
 
-
-
 ## 5. Test ensemble
+
+???background-color: yellow; color: white???
 
 Cette slide teste les fonctions qui fonctionnent ensemble.
 
@@ -77,6 +74,7 @@ Ce texte devrait être centré.
 
 Voici encore du {{blue|texte bleu}}.
 Slide::
+
 ## 6. Test Will
 
 @@@
@@ -147,47 +145,6 @@ Mon tableau :
 ### Mon lien :
 
 [https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
-
-Slide::
-
-## 8. Test Bruno
-
-Ligne 01  
-Ligne 02  
-Ligne 03  
-Ligne 04  
-Ligne 05  
-Ligne 06  
-Ligne 07  
-Ligne 08  
-Ligne 09  
-Ligne 10  
-Ligne 11  
-Ligne 12  
-Ligne 13  
-Ligne 14  
-Ligne 15  
-Ligne 16  
-Ligne 17  
-Ligne 18  
-Ligne 19  
-Ligne 20  
-Ligne 21  
-Ligne 22  
-Ligne 23  
-Ligne 24  
-Ligne 25  
-Ligne 26  
-Ligne 27  
-Ligne 28  
-Ligne 29  
-Ligne 30  
-Ligne 31  
-Ligne 32  
-Ligne 33  
-Ligne 34  
-Ligne 35
-
 
 ### Mon image :
 
