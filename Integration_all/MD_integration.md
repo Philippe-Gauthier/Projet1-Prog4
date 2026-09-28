@@ -107,36 +107,6 @@ Slide::
 
 ## 7. Test Said
 
-# Mon document
-
-## Introduction
-
-Ceci est un texte normal.
-
-**Ceci est en gras.**
-
-*Ceci est en italique*
-
-***Ceci est en ******italique******&******Gras******.***
-
-### Ma liste :
-
-• Pomme
-
-• Banane
-
-• Orange
-
-### Ma liste numérotée :
-
-1. Étape un
-
-2. Étape deux
-
-3. Étape trois
-
-4. Étape quatre
-
 Mon tableau :
 
 | Dembele | Griezman | Ronaldo | Barcola |
@@ -148,49 +118,8 @@ Mon tableau :
 
 [https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
 
-Slide::
-
-## 8. Test Bruno
-
-Ligne 01  
-Ligne 02  
-Ligne 03  
-Ligne 04  
-Ligne 05  
-Ligne 06  
-Ligne 07  
-Ligne 08  
-Ligne 09  
-Ligne 10  
-Ligne 11  
-Ligne 12  
-Ligne 13  
-Ligne 14  
-Ligne 15  
-Ligne 16  
-Ligne 17  
-Ligne 18  
-Ligne 19  
-Ligne 20  
-Ligne 21  
-Ligne 22  
-Ligne 23  
-Ligne 24  
-Ligne 25  
-Ligne 26  
-Ligne 27  
-Ligne 28  
-Ligne 29  
-Ligne 30  
-Ligne 31  
-Ligne 32  
-Ligne 33  
-Ligne 34  
-Ligne 35
-
-
 ### Mon image :
 
-![image1.jpeg](images/image1.jpeg)
+![image1.jpg](images/image1.jpg)
 
 <!-- SAID_END -->
