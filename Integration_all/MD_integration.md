@@ -40,7 +40,7 @@ This is a () test
 ()
 
 This text should not be centered
-
+(MD)
 Slide::
 
 ## 4. Test Antoine
@@ -158,3 +158,10 @@ Mon tableau :
 ![image1.jpeg](images/image1.jpeg)
 
 <!-- SAID_END -->
+
+Slide::
+
+## test additionnel
+
+(MD) 
+(MD)
