@@ -49,7 +49,7 @@ Ceci est un test des couleurs.
 
 {{red|Texte rouge}}
 
-{{blue|Texte bleu}}
+{{blue |Texte bleu}}
 
 {{=yellow|Texte avec un fond jaune}}
 
