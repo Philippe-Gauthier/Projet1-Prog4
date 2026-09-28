@@ -8,6 +8,14 @@ from docx.text.paragraph import Paragraph
 from docx.table import Table
 from docx.text.run import Run
 from docx.oxml.ns import qn
+import ast
+
+# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
+SHORTCUT = "!!"
+# Fichier markdown source à lire
+#FILE = "MD_integration.md"
+# Fichier HTML de sortie généré
+#OUTPUT_FILE = "HTML_integration.html"
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
@@ -16,6 +24,24 @@ FILE = DOSSIER / "MD_integration.md"
 OUTPUT_FILE = DOSSIER / "HTML_integration.html"
 
 # Antoine
+
+# Liste des couleurs acceptées
+COULEURS_VALIDES = {
+    "red", "blue", "green", "yellow", "orange",
+    "purple", "pink", "black", "white", "gray"
+}
+
+def couleur_valide(couleur):
+    # Accepte une couleur présente dans la liste
+    if couleur.lower() in COULEURS_VALIDES:
+        return True
+
+    # Accepte un code hexadécimal comme #FF0000
+    if re.fullmatch(r"#[0-9a-fA-F]{6}", couleur):
+        return True
+
+    return False
+
 def ajouter_style(match):
     # Récupère le groupe correspondant au style (ex: couleur texte / fond)
     style = match.group(1)
@@ -104,19 +130,30 @@ def checklistMD(nomFichier):
 
 # Bruno
 
+
+# Bruno
 def convertir_diapositive(texte, fichier_html):
 
     # Découpe le texte en diapositives à partir du séparateur "Slide::"
     slides = texte.split("Slide::")
     # Chaîne qui accumulera le HTML final de toutes les diapositives
     resultat = ""
+    #Nombre de lignes MAX
+    MAX_LIGNES = 26
 
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
-
-
     # Parcourt chaque diapositive extraite du texte
-    for slide in slides:
+    for numero_slide, slide in enumerate(slides[1:], start=1):
+          # Compte le nombre de lignes dans la diapositive
+        nombre_lignes = len(slide.strip().splitlines())
+
+        #Gestion des avertissements 
+        if nombre_lignes > MAX_LIGNES:
+            print(f"AVERTISSEMENT : La diapositive {numero_slide} dépasse la limite de lignes.")
+            print(f"Nombre de lignes : {nombre_lignes}")
+            print(f"Limite permise : {MAX_LIGNES}")
+            print("Une scrollbar sera créée pour permettre de faire défiler le contenu.")
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
@@ -124,13 +161,25 @@ def convertir_diapositive(texte, fichier_html):
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
         rendu = re.sub(r"\{\{([^|]+)\|(.+?)\}\}", ajouter_style, rendu)
+        if "???" in rendu:
+            slide_style = f'style="{rendu.strip().split("???")[1].split("???")[0].strip()}"'
+            print(f"Slide style detected: {slide_style}")
+        else:
+            slide_style = 'style="background-color: white;"'
+
+        ## we split the rendu from the shortcut ??slidebg: {color}?? and then we use strip to remove whitespace to get consistent results. if the shortcut is not found, we set it to white
+
+        rendu = re.sub(r"\?\?\?.+?\?\?\?", "", rendu).strip()
+        ## we take out the shortcut from the final rendu so that it doesnt show up as text
+        ## need to do \? because ? is a special char
 
         # Enveloppe le rendu HTML de la diapositive dans une div avec la classe "slide"
-        slide_html = '<div class="slide">' + rendu + '</div>'
+        slide_html = f'<div class="slide" {slide_style}>' + rendu + '</div>'
 
         # Ajoute la diapositive au résultat final
         resultat += slide_html
-    print(resultat)
+
+
     css = f"""<!DOCTYPE html>
     <html>
     <head>
@@ -142,24 +191,30 @@ def convertir_diapositive(texte, fichier_html):
     </body>
     </html>
     """
-
-    # Écrit le CSS et le résultat final dans le fichier HTML de sortie
     with open(fichier_html, 'w', encoding='utf-8') as fout:
-        fout.write(css)
+            fout.write(css)
+
+
 
 
 #jay
 def CenterText(File):
     found = False
+    ERROR = False
     modified_lines = []
 
     for line in File.splitlines(keepends=True):
 
-        if line.lstrip().startswith("()") and not found:
+        if line.lstrip().startswith("(MD)") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
             modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
             found = True
 
-        elif line.lstrip().startswith("()") and found:
+        elif line.lstrip().startswith("Slide::") and found: # Vérification si l'utilisateur ne tente de centrer une diapositive
+            found = False # Reset de la détection
+            ERROR = True # Mise en erreur du code et demande de correction
+            break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
+
+        elif line.lstrip().startswith("(MD)") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
             modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
             found = False
 
@@ -167,12 +222,28 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing () for centered block")
+        raise ValueError("Missing closing (MD) for centered block")
+    
+    elif ERROR:
+        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
 
     return ''.join(modified_lines)
 
 
 #Nico
+
+def creer_lien(titre): 
+    # Mettre le titre en minuscules 
+    lien = titre.lower() 
+    
+    # Remplacer les espaces par des tirets 
+    lien = lien.replace(" ", "-") 
+    
+    # Enlever les caractères spéciaux 
+    lien = re.sub(r"[^a-z0-9\-]", "", lien)
+    
+    return lien
+
 def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
@@ -205,7 +276,7 @@ def creer_table_matiere(texte):
                         texteTitre += partieTitre.content
 
                 # Crée le lien d'ancre en remplaçant les espaces par des tirets
-                lienTitre = texteTitre.lower().replace(" ", "-")
+                lienTitre = creer_lien(texteTitre)
 
                 # Ajouter le titre dans la table
                 # L'indentation dépend du niveau du titre (##, ###, ####, etc.)
@@ -229,8 +300,29 @@ def creer_table_matiere(texte):
 
     return New_texte
 
+def ajouter_id_titres(html): 
+    """ Ajoute un id aux titres h2 à h6
+    pour permettre aux liens de la table des matières 
+    de fonctionner. 
+    """ 
+    
+    def remplacer_titre(match): 
+        
+        niveau = match.group(1)
+        titre = match.group(2)
+        
+        # Créer le même lien que dans la table des matières 
+        lien = creer_lien(titre)
+        
+        return f'<h{niveau} id="{lien}">{titre}</h{niveau}>' 
+    
+    # Chercher les titres h2 à h6 
+    html = re.sub( r'<h([2-6])>(.*?)</h\1>', remplacer_titre, html ) 
+    
+    return html
+
 # Zach
-def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
+def build_tree(path: str, max_depth,blacklist, current_depth=1, ) -> dict | list | str:
     """
     Reads a folder and builds a tree consisting of all the files at a certain depth.
     """
@@ -252,25 +344,42 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # Si on a atteint la profondeur maximale, retourne uniquement la liste des noms
     # des fichiers/dossiers à ce niveau (en ignorant les fichiers cachés)
     if current_depth == max_depth:
-        return [f.name for f in path.iterdir() if not f.name.startswith('.')]
-
+        try : 
+            list = []
+            for item in path.iterdir():
+                for name in blacklist:
+                    if name.endswith("*"):
+                        if item.name.startswith(name[:-1]):
+                            break
+                    elif item.name == name:
+                        break
+                else:
+                    list.append(item.name)
+                    
+            return list
+        except PermissionError:
+            return ""
     # Dictionnaire qui représentera l'arborescence à ce niveau
     tree = {}
 
     # Parcourt chaque élément (fichier ou dossier) du chemin courant
-    for item in path.iterdir():
-        # Ignore les fichiers/dossiers cachés
-        if item.name.startswith('.'):
-            continue
-
-        if item.is_dir():
-            # Appel récursif pour construire l'arborescence des sous-dossiers
-            tree[item.name] = build_tree(item, max_depth, current_depth + 1)
-        else:
-            # Pour un fichier, on stocke simplement son nom
-            tree[item.name] = item.name
-
-    return tree
+    try:
+        for item in path.iterdir():
+            for name in blacklist:
+                if name.endswith("*"):
+                    if item.name.startswith(name[:-1]):
+                        break
+                elif item.name == name:
+                    break
+            else:
+                
+                if item.is_dir():
+                    tree[item.name] = build_tree(item, max_depth, blacklist, current_depth + 1)
+                else:
+                    tree[item.name] = item.name
+    except PermissionError:
+        return tree
+    return tree   
 
 
 def build_html(tree: dict | list | str) -> str:
@@ -561,8 +670,22 @@ def preparer_markdown_depuis_word(chemin_word):
             if relation_id:
                 image = paragraphe.part.rels[relation_id].target_part
                 nom = Path(image.partname).name
-                (dossier_images / nom).write_bytes(image.blob)
-                texte += f"\n\n![{nom}](images/{nom})\n\n"
+                donnees = image.blob
+
+                chemin = dossier_images / nom
+                compteur = 1
+
+                # Chercher un nom libre si une image différente existe déjà
+                while chemin.exists() and chemin.read_bytes() != donnees:
+                    chemin = dossier_images / f"{Path(nom).stem}_{compteur}{Path(nom).suffix}"
+                    compteur += 1
+
+                # Sauvegarder seulement si l'image n'existe pas
+                if not chemin.exists():
+                    chemin.write_bytes(donnees)
+
+                # Utiliser le nom réel dans le Markdown
+                texte += f"\n\n![{chemin.name}](images/{chemin.name})\n\n"
 
         return texte
 
@@ -702,7 +825,6 @@ def preparer_markdown_depuis_word(chemin_word):
     print("conversion Word vers Markdown terminée.")
 
 
-
 def generer_html_depuis_markdown():
     """
     Fonction principale qui exécute tout le pipeline de conversion :
@@ -719,7 +841,12 @@ def generer_html_depuis_markdown():
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
     # une table des matières générée à partir des titres markdown (## à ######)
+       
     texte = creer_table_matiere(texte)
+    
+    
+    
+    
 
     
 
@@ -728,32 +855,71 @@ def generer_html_depuis_markdown():
     lignes = texte.splitlines(keepends=True)
     lignesModifiees = []
 
+    # Indique si le prochain arbre doit être centré
+    centrer_arbre = False
+
     # Parcourt chaque ligne du texte
     for ligne in lignes:
-        # Si la ligne commence par le raccourci défini (SHORTCUT, ex: "!!")
-        # c'est une demande de génération d'arbre de fichiers
+
+
+        # Détection de la commande de centrage d'arbre (
+        
+        if ligne.lstrip().startswith("(Centered_Tree)"):
+
+            # Centrage du prochain arbre de fichiers généré
+            centrer_arbre = True
+
+            # On ne conserve pas (TREE) dans le Markdown final
+            continue
+
+        # Détection du raccourci !! pour créer un arbre
         if ligne.startswith(SHORTCUT):
             # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
-            parameters = ligne[len(SHORTCUT):].strip().split(' ')
+            parameters = ligne[len(SHORTCUT):len(ligne)-len(SHORTCUT)-1].strip().split(';')
+            real_param={}
+            for param in parameters:
+                x = param.strip().split('=')
+                print(x)
+                real_param[x[0]] = x[1]
+            
             # Le premier paramètre est le chemin du dossier à explorer
             path = parameters[0]
 
-            # Tente de récupérer la profondeur maximale en 2e paramètre
-            # Si absent ou invalide, utilise une profondeur par défaut de 1
+            # Tente de récupérer la profondeur maximale
+            # Si absente ou invalide, utilise 1
             try:
-                depth = int(parameters[1])
+                path = real_param["path"]
+            except:
+                path = "."
+
+            try:
+                depth = int(real_param["depth"])
             except (IndexError, ValueError):
                 depth = 1
 
-            # Construit la structure de données de l'arborescence (dict/list/str)
-            tree_data = build_tree(path, depth)
+            try:
+                blacklist = ast.literal_eval((real_param["blacklist"]))
+            except:
+                print("Erreur de lecture de la blacklist d'un arbre")
+                blacklist = []
+
+            tree_data = build_tree(path, depth,blacklist)
             # Convertit cette structure en bloc HTML (div + liste)
             html_tree = render_tree_block(tree_data)
+
+
+            # Si (TREE) est détecté avant le shortcut !!, on centre l'arbre dans le HTML final
+            if centrer_arbre:
+                html_tree = html_tree.replace('<div class="file-tree">','<div class="file-tree centered-tree">')
+
+                # Reset : le prochain arbre ne sera pas centré par défaut
+                centrer_arbre = False
 
             # Remplace la ligne du raccourci par le HTML généré
             lignesModifiees.append(html_tree + "\n")
 
         else:
+
             # Ligne normale : conservée telle quelle
             lignesModifiees.append(ligne)
 
@@ -792,12 +958,18 @@ def generer_html_depuis_markdown():
     # Will : image
 
     texte = preprocess(texte)
+    
+   
+
 
     # Création du HTML final
     # Découpe le texte en diapositives ("Slide::"), convertit chacune en HTML,
     # applique les styles de couleur (Antoine), puis écrit le résultat
     # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
     convertir_diapositive(texte, OUTPUT_FILE)
+    
+    
+
 
 if __name__ == "__main__":
 
@@ -812,5 +984,3 @@ if __name__ == "__main__":
         generer_html_depuis_markdown()
     else:
         print("Erreur : MD_integration.md est introuvable.")
-
-    generer_html_depuis_markdown()
