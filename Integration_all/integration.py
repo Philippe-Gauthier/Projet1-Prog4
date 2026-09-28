@@ -880,7 +880,7 @@ def generer_html_depuis_markdown():
             continue
 
         # Détection du raccourci !! pour créer un arbre
-        if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT):
+        if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT+"\n"):
             # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
             parameters = ligne[len(SHORTCUT):len(ligne)-len(SHORTCUT)-1].strip().split(';')
             real_param={}
