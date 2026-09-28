@@ -67,7 +67,7 @@ Voici une liste des différentes fonctionnalitées ajoutées par cette extension
 |Personalisation de diapositive| `??? css ???`             | Style CSS de la diapositive (ex.`??? background-color: black; ???`) |
 |Table des matières| `**contenu:**`            | Remplacé par une table des matières (titres`##` à `######`)    |
 |Arborescence de dossier| `!!{chemin} {profondeur}`     | Remplacé par l'arborescence du dossier (profondeur par défaut : 1)  |
-|Liste à cocher| `/// texte` et \\               | Case à cocher                                                        |
+|Liste à cocher| `/// texte` et `/// texte`             | Case à cocher                                                        |
 |Texte coloré| `{{couleur|texte}}`       | Texte en couleur                                                      |
 |Texte surligné| `{{=couleur|texte}}`      | Texte surligné                                                       |
 |Texte coloré et surligné| `{{couleur,=fond|texte}}` | Texte en couleur + surlignage                                         |
