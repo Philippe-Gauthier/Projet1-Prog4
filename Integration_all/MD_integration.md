@@ -1,4 +1,3 @@
-
 # TEST D'INTÉGRATION
 
 **contenu:**
@@ -39,9 +38,7 @@ This is a () test
 
 This text should not be centered
 
-()
 Slide::
-()
 
 ## 4. Test Antoine
 
@@ -57,9 +54,9 @@ Ceci est un test des couleurs.
 
 Slide::
 
-
-
 ## 5. Test ensemble
+
+???background-color: yellow; color: white???
 
 Cette slide teste les fonctions qui fonctionnent ensemble.
 
@@ -77,6 +74,7 @@ Ce texte devrait être centré.
 
 Voici encore du {{blue|texte bleu}}.
 Slide::
+
 ## 6. Test Will
 
 @@@
