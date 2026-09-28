@@ -234,10 +234,9 @@ def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
     if "**contenu:**" not in texte.lower():
-        print("Aucun **contenu:** détecté.")
         return texte
 
-    print("**contenu:** détecté.")
+    print("Table des matières créée.")
 
     # Initialise la table des matières avec son titre en markdown
     tableMatieres = "## Table des matières\n\n"
@@ -558,7 +557,6 @@ def preprocess(text):
 
                 if key == "alt":
                     alt_description = value
-                    print("alt detected")
                     continue
 
                 if key == "title":
