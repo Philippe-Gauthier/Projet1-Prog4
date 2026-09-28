@@ -12,11 +12,6 @@ from docx.oxml.ns import qn
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
-# Fichier markdown source à lire
-#FILE = "MD_integration.md"
-# Fichier HTML de sortie généré
-#OUTPUT_FILE = "HTML_integration.html"
-
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
 DOSSIER = Path(__file__).resolve().parent
@@ -185,7 +180,7 @@ def convertir_diapositive(texte, fichier_html):
 
         # Ajoute la diapositive au résultat final
         resultat += slide_html
-    print(resultat)
+   
 
     css = f"""<!DOCTYPE html>
     <html>
@@ -255,10 +250,9 @@ def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
     if "**contenu:**" not in texte.lower():
-        print("Aucun **contenu:** détecté.")
         return texte
 
-    print("**contenu:** détecté.")
+    print("Table des matières créée.")
 
     # Initialise la table des matières avec son titre en markdown
     tableMatieres = "## Table des matières\n\n"
@@ -374,6 +368,7 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
                 tree[item.name] = item.name
     except PermissionError:
         return tree
+    print("Arbre de fichiers créé.")
     return tree
 
 
@@ -567,7 +562,6 @@ def preprocess(text):
 
                 if key == "alt":
                     alt_description = value
-                    print("alt detected")
                     continue
 
                 if key == "title":
