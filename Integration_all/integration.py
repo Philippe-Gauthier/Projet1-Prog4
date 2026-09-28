@@ -122,7 +122,9 @@ def convertir_diapositive(texte, fichier_html):
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
         
-        # Ajout des id aux titres HTML
+
+        # Ajoute les id aux titres pour les liens de la table des matières
+
         rendu = ajouter_id_titres(rendu)
 
         # Antoine : couleurs
