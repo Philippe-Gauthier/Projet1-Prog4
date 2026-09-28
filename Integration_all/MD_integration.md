@@ -201,6 +201,8 @@ Slide::
 
 <!-- SAID_START -->
 
+Slide::
+
 ## 7. Test Said
 
 # Mon document
@@ -246,6 +248,6 @@ Mon tableau :
 
 ### Mon image :
 
-![image1.jpg](images/image1.jpg)
+![image1.jpeg](images/image1.jpeg)
 
 <!-- SAID_END -->
