@@ -481,7 +481,8 @@ VALID_CSS_PROPERTIES = {
     "transition-duration", "transition-property",
     "transition-timing-function", "translate", "user-select",
     "vertical-align", "visibility", "white-space", "width", "word-break",
-    "word-spacing", "word-wrap", "z-index", "src", "alt", "title"
+    "word-spacing", "word-wrap", "z-index", "src", "alt", "title",
+    "poster", "preload", "controls", "autoplay", "loop", "muted", "playsinline"
 }
 
 def preprocess(text):
@@ -512,21 +513,26 @@ def preprocess(text):
 
     while i < len(lines):
 
+#######################################PHOTO#####################################################################################################################
         # Cherche le début d'un bloc @@@
         # Une fois trouvé, on cherche le prochain @@@ pour marquer la fin du bloc 
-        if lines[i].strip() == "@@@":
+        if lines[i].strip() in ("@@@", ">>>"):
+
+            # Détermine le type selon le délimiteur
+            delimiter = lines[i].strip()
+            media_type = "image" if delimiter == "@@@" else "video"
 
             # Recherche le prochain @@@ qui marque la fin du bloc
             j = i + 1
 
-            while j < len(lines) and lines[j].strip() != "@@@":
+            while j < len(lines) and lines[j].strip() != delimiter:
                 j += 1
 
             # Aucun @@@ de fermeture trouvé
             if j >= len(lines):
                 raise ValueError(
-                    f"@@@ Invalide a la ligne {i + 1}: "
-                    "@@@ de fermeture attendue."
+                    f"@@@ ou >>> Invalide a la ligne {i + 1}: "
+                    "@@@ ou >>> de fermeture attendue."
                 )
 
             # Dictionnaire contenant les propriétés de l'image
@@ -544,7 +550,7 @@ def preprocess(text):
                 # Vérifie que la ligne contient ":"
                 if ":" not in line:
                     raise ValueError(
-                        f"Propriétés invalide dans le bloc @@@: {line}"
+                        f"Propriétés invalide dans le bloc @@@/>>>: {line}"
                     )
 
                 # Sépare la propriété et sa valeur
@@ -567,7 +573,7 @@ def preprocess(text):
                 # Vérifie que la clé est une propriété CSS valide
                 if key not in VALID_CSS_PROPERTIES:
                     raise ValueError(
-                        f"Propriété CSS inconnu dans le bloc @@@ "
+                        f"Propriété CSS inconnu dans le bloc @@@/>>> "
                         f"a la ligne {i + 1}: '{key}'"
                     )
 
@@ -583,7 +589,7 @@ def preprocess(text):
             # L'attribut src est obligatoire (ofc lol)
             if "src" not in properties:
                 raise ValueError(
-                    f"@@@ Invalide a la ligne {i + 1}: "
+                    f"@@@ ou >>> Invalide a la ligne {i + 1}: "
                     "'src' manquant."
                 )
 
@@ -600,14 +606,21 @@ def preprocess(text):
             # Transforme les propriétés CSS en une seule chaîne
             style = "; ".join(css_properties)
 
-            # Génère le HTML de l'image
-            html = f'<img src="{src}"'
+            if media_type == "image":
+                print("Image Detected")
+                html = f'<img src="{src}"'
+            else:
+                print("Video Detected")
+                html = f'<video src="{src}" controls'
 
             if style:
                 html += f' style="{style};"'
 
             if alt_description:
                 html += f' alt="{alt_description}"'
+
+            if title_description:
+                html += f' title="{title_description}"'
 
             alt_description = ""  # Reset pour pas leak
             title_description = ""  # Reset pour pas leak
@@ -846,9 +859,6 @@ def generer_html_depuis_markdown():
 
 
         # Détection de la commande de centrage d'arbre (
-        
-
-
         # Détection du raccourci !! pour créer un arbre
         if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT+"\n"):
             # Extrait les paramètres après le raccourci (ex: chemin et profondeur)

@@ -8,10 +8,7 @@ Slide::
 
 Ceci est un test de la fonction de Zach.
 
-
 !! path=. ; depth=2 ; blacklist=[".*","~$*"]  !!
-
-
 
 Slide::
 
@@ -84,6 +81,16 @@ Slide::
 
 ## 6. Test Will
 
+>>>
+src: Libra.jpeg
+width: 500px
+height: 500px
+margin-left: 50px
+margin-top: 20px
+border-radius: 10px
+alt: texte alternatif ici
+>>>
+
 @@@
 src: Libra.jpeg
 width: 500px
@@ -135,19 +142,16 @@ Ceci est un texte normal.
 ### Ma liste numérotée :
 
 1. Étape un
-
 2. Étape deux
-
 3. Étape trois
-
 4. Étape quatre
 
 Mon tableau :
 
-| Dembele | Griezman | Ronaldo | Barcola |
-| --- | --- | --- | --- |
-| Vitinha | Veratti | Mazadona | Zaire-emery |
-| Hakimi | mendes | marquinhos | Ramos |
+| Dembele | Griezman | Ronaldo    | Barcola     |
+| ------- | -------- | ---------- | ----------- |
+| Vitinha | Veratti  | Mazadona   | Zaire-emery |
+| Hakimi  | mendes   | marquinhos | Ramos       |
 
 ### Mon lien :
 
