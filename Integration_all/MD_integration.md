@@ -8,7 +8,10 @@ Slide::
 
 Ceci est un test de la fonction de Zach.
 
-!! . 2
+
+!! path=. ; depth=2 ; blacklist=[".*","~$*"]  !!
+
+
 
 Slide::
 
@@ -16,69 +19,80 @@ Slide::
 
 Ceci est un test de la checklist.
 
-=Faire le code
+&Faire le code
 +Tester le programme
 +Faire la documentation
 
-# !! . 2
+Slide::
 
-# 
+## 3. Test Jay
 
-# Slide::
+Ceci est un test du texte centré.
 
-# 
+()
 
-# \## 2. Test Amé
+Voici un texte qui devrait être centré.
 
-# 
+()
 
 ()
 This is a () test
 ()
 
 This text should not be centered
-
+(MD)
 Slide::
 
-# 
+## 4. Test Antoine
 
-# ///Faire le code
+Ceci est un test des couleurs.
 
-# ///Tester le programme
+{{red|Texte rouge}}
 
 {{#FF0000 |Texte rouge en hexadécimal}}
 
 {{blue,=#FFFF00|Texte bleu avec fond jauneeS}}
 
-***Ceci est en italique******&******Gras******.***
+{{blue|Texte bleu}}
 
-# 
+{{=yellow|Texte avec un fond jaune}}
 
-# Slide::
+{{red,=yellow|Texte rouge avec un fond jaune}}
 
-# 
+Slide::
 
-# \## 3. Test Jay
+## 5. Test ensemble
 
-# 
+???background-color: yellow; color: white???
 
-# Ceci est un test du texte centré.
+Cette slide teste les fonctions qui fonctionnent ensemble.
 
-# 
+Voici du {{red|texte rouge}} dans la même slide.
 
-# ()
+()
 
-# 
+Ce texte devrait être centré.
 
-# Voici un texte qui devrait être centré.
+()
 
-# 
+///Tâche 1
+///Tâche 2
+///Tâche 3
 
-# ()
+Voici encore du {{blue|texte bleu}}.
+Slide::
 
-# 
+## 6. Test Will
 
-# Slide::
+@@@
+src: Libra.jpeg
+width: 500px
+height: 500px
+margin-left: 50px
+margin-top: 20px
+border-radius: 10px
+alt: texte alternatif ici
+@@@
 
 # 
 
@@ -198,6 +212,15 @@ Slide::
 
 # 
 
+@@@
+src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
+width: 400px
+height: 500px
+margin-left: 50px
+margin-top: 20px
+border-radius: 10px
+alt: texte alternatif ici
+@@@
 
 <!-- SAID_START -->
 
@@ -251,3 +274,10 @@ Mon tableau :
 ![image1.jpeg](images/image1.jpeg)
 
 <!-- SAID_END -->
+
+Slide::
+
+## test additionnel
+
+(MD) 
+(MD)

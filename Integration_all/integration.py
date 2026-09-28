@@ -80,56 +80,49 @@ def ajouter_style(match):
     return f'<span style="{style_html}">{texte}</span>'
 
 # Amé
-def checklistMD(nomFichier):
+def checklistMD(texte):
 
     # Liste qui contiendra toutes les lignes (modifiées ou non) du fichier
     modifiedLines = []
 
-    # Ouverture du fichier markdown en lecture
-    with open(nomFichier + '.md', 'r', encoding='utf-8') as markdownFile:
+    # Séparer les lignes du texte
+    lignes = texte.splitlines(keepends=True)
 
-        # Lecture de toutes les lignes du fichier
-        readFile = markdownFile.readlines()
+    for line in lignes:
+        # Liste temporaire des caractères/éléments pour construire la ligne modifiée
+        modifiedLine = []
 
-        for line in readFile:
-
-            # Liste temporaire des caractères/éléments pour construire la ligne modifiée
-            modifiedLine = []
-
-            # Vérifie si la ligne est une ligne de checklist (contient '+' ou '=')
-            if  (line.find('+') != -1) or (line.find('=') != -1):
-                # Parcourt chaque caractère de la ligne
-                for letter in line:
-                    if letter == "+":
-                        # Insère la balise HTML de la checkbox et le label au début de la ligne
-                        modifiedLine.append('<input type="checkbox"> <label>')
-                    elif letter == "=":
-                        # Insère la balise HTML de la checkbox et le label au début de la ligne
-                        modifiedLine.append('<input type="checkbox" checked> <label>')
-                    else:
-                        modifiedLine.append(letter)
-
-                # Si la ligne se termine par un saut de ligne, remplace le dernier élément
-                # par la fermeture du label suivie du saut de ligne
-                if line.endswith('\n'):
-                    modifiedLine[-1] = '</label><br>\n'
+        # Vérifie si la ligne est une ligne de checklist (contient '+' ou '&')
+        if  (line.find('+') != -1) or (line.find('&') != -1):
+            # Parcourt chaque caractère de la ligne
+            for letter in line:
+                if letter == "+":
+                    # Insère la balise HTML de la checkbox et le label au début de la ligne
+                    modifiedLine.append('<input type="checkbox"> <label>')
+                elif letter == "&":
+                    # Insère la balise HTML de la checkbox et le label au début de la ligne
+                    modifiedLine.append('<input type="checkbox" checked> <label>')
                 else:
-                    # Sinon, ajoute simplement la fermeture du label à la fin
-                    modifiedLine.append('</label><br>\n')
+                    modifiedLine.append(letter)
 
-                # Cette ligne doit être ici
-                # Reconstitue la ligne complète et l'ajoute à la liste des lignes modifiées
-                modifiedLines.append("".join(modifiedLine))
-
+            # Si la ligne se termine par un saut de ligne, remplace le dernier élément
+            # par la fermeture du label suivie du saut de ligne
+            if line.endswith('\n'):
+                modifiedLine[-1] = '</label><br>\n'
             else:
-                # Ligne normale (pas de checklist) : ajoutée telle quelle
-                modifiedLines.append(line)
+                # Sinon, ajoute simplement la fermeture du label à la fin
+                modifiedLine.append('</label><br>\n')
+
+            # Cette ligne doit être ici
+            # Reconstitue la ligne complète et l'ajoute à la liste des lignes modifiées
+            modifiedLines.append("".join(modifiedLine))
+
+        else:
+            # Ligne normale (pas de checklist) : ajoutée telle quelle
+            modifiedLines.append(line)
 
     # Retourne le contenu complet reconstitué sous forme de chaîne unique
     return "".join(modifiedLines)
-
-# Bruno
-
 
 # Bruno
 def convertir_diapositive(texte, fichier_html):
@@ -222,10 +215,10 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing (MD) for centered block")
+        raise ValueError("(MD) manquant dans la dernière slide")
     
     elif ERROR:
-        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
+        raise ValueError("Vérifiez la syntaxe de vos blocs centrés, un (MD) a été ouvert mais pas fermé avant une diapositive. \n\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n\n")
 
     return ''.join(modified_lines)
 
@@ -248,10 +241,9 @@ def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
     if "**contenu:**" not in texte.lower():
-        print("Aucun **contenu:** détecté.")
         return texte
 
-    print("**contenu:** détecté.")
+    print("Table des matières créée.")
 
     # Initialise la table des matières avec son titre en markdown
     tableMatieres = "## Table des matières\n\n"
@@ -572,7 +564,6 @@ def preprocess(text):
 
                 if key == "alt":
                     alt_description = value
-                    print("alt detected")
                     continue
 
                 if key == "title":
@@ -824,7 +815,6 @@ def preparer_markdown_depuis_word(chemin_word):
 
     print("conversion Word vers Markdown terminée.")
 
-
 def generer_html_depuis_markdown():
     """
     Fonction principale qui exécute tout le pipeline de conversion :
@@ -849,12 +839,6 @@ def generer_html_depuis_markdown():
     # une table des matières générée à partir des titres markdown (## à ######)
        
     texte = creer_table_matiere(texte)
-    
-    
-    
-    
-
-    
 
     # Zach : arbre de fichiers
     # Découpe le texte en lignes (en conservant les sauts de ligne)
@@ -870,13 +854,7 @@ def generer_html_depuis_markdown():
 
         # Détection de la commande de centrage d'arbre (
         
-        if ligne.lstrip().startswith("(Centered_Tree)"):
 
-            # Centrage du prochain arbre de fichiers généré
-            centrer_arbre = True
-
-            # On ne conserve pas (TREE) dans le Markdown final
-            continue
 
         # Détection du raccourci !! pour créer un arbre
         if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT+"\n"):
@@ -909,6 +887,9 @@ def generer_html_depuis_markdown():
                 print("Erreur de lecture de la blacklist d'un arbre")
                 blacklist = []
 
+
+            centrer_arbre =True if real_param.get("centered",False) in ["True","true","1"] else False
+
             tree_data = build_tree(path, depth,blacklist)
             # Convertit cette structure en bloc HTML (div + liste)
             html_tree = render_tree_block(tree_data)
@@ -932,29 +913,8 @@ def generer_html_depuis_markdown():
     # Reconstitue le texte complet avec les arbres de fichiers insérés
     texte = "".join(lignesModifiees)
 
-    # Amé : checklist
-    # Découpe à nouveau le texte (mis à jour) en lignes
-    lignes = texte.splitlines(keepends=True)
-    lignesModifiees = []
-
-    # Parcourt chaque ligne du texte
-    for ligne in lignes:
-        # Si la ligne commence par "///" -> c'est un élément de checklist
-        if ligne.startswith("///"):
-            # Récupère le texte de la checklist (après "///", sans espaces superflus)
-            texteChecklist = ligne[3:].strip()
-            # Remplace la ligne par une checkbox HTML avec son label
-            lignesModifiees.append(
-                '<input type="checkbox"> <label>' +
-                texteChecklist +
-                '</label><br>\n'
-            )
-        else:
-            # Ligne normale : conservée telle quelle
-            lignesModifiees.append(ligne)
-
     # Reconstitue le texte complet avec les checklists converties en HTML
-    texte = "".join(lignesModifiees)
+    texte = checklistMD(texte)
 
     # Jay : texte centré
     # Recherche les paires de "()" dans le texte pour ouvrir/fermer
@@ -985,7 +945,7 @@ if __name__ == "__main__":
         preparer_markdown_depuis_word(fichier_word)
     else:
         print("Aucun document Word trouvé. Utilisation du Markdown existant.")
-
+    
     if FILE.is_file():
         generer_html_depuis_markdown()
     else:
