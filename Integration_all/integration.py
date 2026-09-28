@@ -8,7 +8,7 @@ from docx.text.paragraph import Paragraph
 from docx.table import Table
 from docx.text.run import Run
 from docx.oxml.ns import qn
-
+import ast
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
@@ -185,7 +185,7 @@ def convertir_diapositive(texte, fichier_html):
 
         # Ajoute la diapositive au résultat final
         resultat += slide_html
-    print(resultat)
+
 
     css = f"""<!DOCTYPE html>
     <html>
@@ -329,8 +329,7 @@ def ajouter_id_titres(html):
     return html
 
 # Zach
-def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
-
+def build_tree(path: str, max_depth,blacklist, current_depth=1, ) -> dict | list | str:
     """
     Reads a folder and builds a tree consisting of all the files at a certain depth.
     """
@@ -353,7 +352,18 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # des fichiers/dossiers à ce niveau (en ignorant les fichiers cachés)
     if current_depth == max_depth:
         try : 
-            return [f.name for f in path.iterdir() if not f.name.startswith('.')]
+            list = []
+            for item in path.iterdir():
+                for name in blacklist:
+                    if name.endswith("*"):
+                        if item.name.startswith(name[:-1]):
+                            break
+                    elif item.name == name:
+                        break
+                else:
+                    list.append(item.name)
+                    
+            return list
         except PermissionError:
             return ""
     # Dictionnaire qui représentera l'arborescence à ce niveau
@@ -362,19 +372,21 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # Parcourt chaque élément (fichier ou dossier) du chemin courant
     try:
         for item in path.iterdir():
-            # Ignore les fichiers/dossiers cachés
-            if item.name.startswith('.'):
-                continue
-
-            if item.is_dir():
-                # Appel récursif pour construire l'arborescence des sous-dossiers
-                tree[item.name] = build_tree(item, max_depth, current_depth + 1)
+            for name in blacklist:
+                if name.endswith("*"):
+                    if item.name.startswith(name[:-1]):
+                        break
+                elif item.name == name:
+                    break
             else:
-                # Pour un fichier, on stocke simplement son nom
-                tree[item.name] = item.name
+                
+                if item.is_dir():
+                    tree[item.name] = build_tree(item, max_depth, blacklist, current_depth + 1)
+                else:
+                    tree[item.name] = item.name
     except PermissionError:
         return tree
-    return tree
+    return tree   
 
 
 def build_html(tree: dict | list | str) -> str:
@@ -856,19 +868,34 @@ def generer_html_depuis_markdown():
         # c'est une demande de génération d'arbre de fichiers
         if ligne.startswith(SHORTCUT):
             # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
-            parameters = ligne[len(SHORTCUT):].strip().split(' ')
+            parameters = ligne[len(SHORTCUT):len(ligne)-len(SHORTCUT)-1].strip().split(';')
+            real_param={}
+            for param in parameters:
+                x = param.strip().split('=')
+                real_param[x[0]] = x[1]
+            
             # Le premier paramètre est le chemin du dossier à explorer
             path = parameters[0]
 
             # Tente de récupérer la profondeur maximale en 2e paramètre
             # Si absent ou invalide, utilise une profondeur par défaut de 1
             try:
-                depth = int(parameters[1])
+                path = real_param["path"]
+            except:
+                path = "."
+
+            try:
+                depth = int(real_param["depth"])
             except (IndexError, ValueError):
                 depth = 1
 
-            # Construit la structure de données de l'arborescence (dict/list/str)
-            tree_data = build_tree(path, depth)
+            try:
+                blacklist = ast.literal_eval((real_param["blacklist"]))
+            except:
+                print("Erreur de lecture de la blacklist d'un arbre")
+                blacklist = []
+
+            tree_data = build_tree(path, depth,blacklist)
             # Convertit cette structure en bloc HTML (div + liste)
             html_tree = render_tree_block(tree_data)
 

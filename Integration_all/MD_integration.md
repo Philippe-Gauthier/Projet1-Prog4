@@ -8,7 +8,7 @@ Slide::
 
 Ceci est un test de la fonction de Zach.
 
-!! . 2
+!! path=.,depth=2,blacklist=[".*","~$*"]!!
 
 Slide::
 
