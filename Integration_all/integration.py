@@ -832,12 +832,6 @@ def generer_html_depuis_markdown():
     # une table des matières générée à partir des titres markdown (## à ######)
        
     texte = creer_table_matiere(texte)
-    
-    
-    
-    
-
-    
 
     # Zach : arbre de fichiers
     # Découpe le texte en lignes (en conservant les sauts de ligne)
