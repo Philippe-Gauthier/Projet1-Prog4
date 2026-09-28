@@ -40,7 +40,7 @@ This is a () test
 ()
 
 This text should not be centered
-(MD)
+
 Slide::
 
 ## 4. Test Antoine
