@@ -1,9 +1,16 @@
+<<<<<<< Updated upstream
 # TEST D'INTÉGRATION
 
 # 
+=======
+
+
+<!-- SAID_START -->
+>>>>>>> Stashed changes
 
 # \*\*contenu:\*\*
 
+<<<<<<< Updated upstream
 # 
 
 # Slide::
@@ -49,9 +56,45 @@ Slide::
 {{#FF0000|Texte rouge en hexadécimal}}
 
 {{blue,=#FFFF00|Texte bleu avec fond jaune}}
+=======
+## 7. Test Said
 
-{{blue|Texte bleu}}
+# Test ultime
 
+Contenu :
+
+## Premier paragraphe :
+
+Bonjour, ceci est mon premier paragraphe.
+
+## Deuxième paragraphe :
+
+Voici un deuxième paragraphe (je ne sais pas quoi écrire haha)
+
+# Test ultime 2
+
+## Quatrième paragraphe :
+
+Bonjour, ceci est mon premier paragraphe.
+
+## Cinquième paragraphe :
+
+Voici un deuxième paragraphe (je ne sais pas quoi écrire haha)
+
+# Mon document
+
+## Introduction
+
+Ceci est un texte normal.
+
+**Ceci est en gras.**
+
+*Ceci est en italique*
+>>>>>>> Stashed changes
+
+***Ceci est en italique******&******Gras******.***
+
+<<<<<<< Updated upstream
 # 
 
 # Slide::
@@ -311,9 +354,15 @@ Slide::
 # <!-- SAID\_END -->
 
 <!-- SAID_START -->
+=======
+### Ma liste :
 
-Slide::
+• Pomme
+>>>>>>> Stashed changes
 
+• Banane
+
+<<<<<<< Updated upstream
 ## 7. Test Said
 
 Mon tableau :
@@ -325,10 +374,37 @@ Mon tableau :
 
 ### Mon lien :
 
+=======
+• Orange
+
+### Ma liste numérotée :
+
+1. Étape un
+
+2. Étape deux
+
+3. Étape trois
+
+4. Étape quatre
+
+Mon tableau :
+
+| Dembele | Griezman | Ronaldo | Barcola |
+| --- | --- | --- | --- |
+| Vitinha | Veratti | Mazadona | Zaire-emery |
+| Hakimi | mendes | marquinhos | Ramos |
+
+### Mon lien :
+
+>>>>>>> Stashed changes
 [https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
 
 ### Mon image :
 
+<<<<<<< Updated upstream
 ![image1.jpg](images/image1.jpg)
+=======
+![image1.jpeg](images/image1.jpeg)
+>>>>>>> Stashed changes
 
 <!-- SAID_END -->
