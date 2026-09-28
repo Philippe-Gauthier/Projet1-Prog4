@@ -16,7 +16,7 @@ Slide::
 
 Ceci est un test de la checklist.
 
-=Faire le code
+&Faire le code
 +Tester le programme
 +Faire la documentation
 
