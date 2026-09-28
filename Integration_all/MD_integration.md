@@ -8,7 +8,10 @@ Slide::
 
 Ceci est un test de la fonction de Zach.
 
-!! . 2
+
+!! path=. ; depth=2 ; blacklist=[".*","~$*"]  !!
+
+
 
 Slide::
 
@@ -20,17 +23,17 @@ Ceci est un test de la checklist.
 +Tester le programme
 +Faire la documentation
 
-# !! . 2
+Slide::
 
-# 
+## 3. Test Jay
 
-# Slide::
+Ceci est un test du texte centré.
 
-# 
+()
 
-# \## 2. Test Amé
+Voici un texte qui devrait être centré.
 
-# 
+()
 
 ()
 This is a () test
@@ -40,166 +43,72 @@ This text should not be centered
 
 Slide::
 
-# 
+## 4. Test Antoine
 
-# ///Faire le code
+Ceci est un test des couleurs.
 
-# ///Tester le programme
+{{red|Texte rouge}}
 
 {{#FF0000 |Texte rouge en hexadécimal}}
 
 {{blue,=#FFFF00|Texte bleu avec fond jaune}}
 
-***Ceci est en italique******&******Gras******.***
+{{blue|Texte bleu}}
 
-# 
+{{=yellow|Texte avec un fond jaune}}
 
-# Slide::
+{{red,=yellow|Texte rouge avec un fond jaune}}
 
-# 
+Slide::
 
-# \## 3. Test Jay
+## 5. Test ensemble
 
-# 
+???background-color: yellow; color: white???
 
-# Ceci est un test du texte centré.
+Cette slide teste les fonctions qui fonctionnent ensemble.
 
-# 
+Voici du {{red|texte rouge}} dans la même slide.
 
-# ()
+()
 
-# 
+Ce texte devrait être centré.
 
-# Voici un texte qui devrait être centré.
+()
 
-# 
+///Tâche 1
+///Tâche 2
+///Tâche 3
 
-# ()
+Voici encore du {{blue|texte bleu}}.
+Slide::
 
-# 
+## 6. Test Will
 
-# Slide::
+@@@
+src: Libra.jpeg
+width: 500px
+height: 500px
+margin-left: 50px
+margin-top: 20px
+border-radius: 10px
+alt: texte alternatif ici
+@@@
 
-# 
+Slide::
 
-# \## 4. Test Antoine
-
-# 
-
-# Ceci est un test des couleurs.
-
-# 
-
-# {{red|Texte rouge}}
-
-# 
-
-# {{blue|Texte bleu}}
-
-# 
-
-# {{=yellow|Texte avec un fond jaune}}
-
-# 
-
-# {{red,=yellow|Texte rouge avec un fond jaune}}
-
-# 
-
-# Slide::
-
-# 
-
-# 
-
-# 
-
-# \## 5. Test ensemble
-
-# 
-
-# Cette slide teste les fonctions qui fonctionnent ensemble.
-
-# 
-
-# Voici du {{red|texte rouge}} dans la même slide.
-
-# 
-
-# ()
-
-# 
-
-# Ce texte devrait être centré.
-
-# 
-
-# ()
-
-# 
-
-# ///Tâche 1
-
-# ///Tâche 2
-
-# ///Tâche 3
-
-# 
-
-# Voici encore du {{blue|texte bleu}}.
-
-# Slide::
-
-# \## 6. Test Will
-
-# 
-
-# @@@
-
-# src: Libra.jpeg
-
-# width: 500px
-
-# height: 500px
-
-# margin-left: 50px
-
-# margin-top: 20px
-
-# border-radius: 10px
-
-# alt: texte alternatif ici
-
-# @@@
-
-# 
-
-# Slide::
-
-# 
-
-# @@@
-
-# src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
-
-# width: 400px
-
-# height: 500px
-
-# margin-left: 50px
-
-# margin-top: 20px
-
-# border-radius: 10px
-
-# alt: texte alternatif ici
-
-# @@@
-
-# 
-
+@@@
+src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif
+width: 400px
+height: 500px
+margin-left: 50px
+margin-top: 20px
+border-radius: 10px
+alt: texte alternatif ici
+@@@
 
 <!-- SAID_START -->
+
+Slide::
 
 ## 7. Test Said
 
@@ -246,6 +155,6 @@ Mon tableau :
 
 ### Mon image :
 
-![image1.jpg](images/image1.jpg)
+![image1.jpeg](images/image1.jpeg)
 
 <!-- SAID_END -->

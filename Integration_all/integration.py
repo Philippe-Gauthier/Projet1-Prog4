@@ -853,13 +853,7 @@ def generer_html_depuis_markdown():
 
         # Détection de la commande de centrage d'arbre (
         
-        if ligne.lstrip().startswith("(Centered_Tree)"):
 
-            # Centrage du prochain arbre de fichiers généré
-            centrer_arbre = True
-
-            # On ne conserve pas (TREE) dans le Markdown final
-            continue
 
         # Détection du raccourci !! pour créer un arbre
         if ligne.startswith(SHORTCUT) and ligne.endswith(SHORTCUT+"\n"):
@@ -891,6 +885,9 @@ def generer_html_depuis_markdown():
             except:
                 print("Erreur de lecture de la blacklist d'un arbre")
                 blacklist = []
+
+
+            centrer_arbre =True if real_param.get("centered",False) in ["True","true","1"] else False
 
             tree_data = build_tree(path, depth,blacklist)
             # Convertit cette structure en bloc HTML (div + liste)
