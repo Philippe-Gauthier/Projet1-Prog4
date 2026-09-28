@@ -49,21 +49,14 @@ def ajouter_style(match):
     # Format attendu : "couleur_texte,=couleur_fond"
     if ",=" in style:
         couleur_texte, couleur_fond = style.split(",=", 1)
+        couleur_texte = couleur_texte.strip()
+        couleur_fond = couleur_fond.strip()
 
-    # Cas où seule une couleur de fond est définie
-    # Format attendu : "=couleur_fond"
-    elif style.startswith("="):
-        couleur_fond = style[1:]
+    elif style.strip().startswith("="):
+        couleur_fond = style.strip()[1:].strip()
 
-    # Cas où seule une couleur de texte est définie
     else:
-        couleur_texte = style
-    # Vérifie si les couleurs sont valides
-    if couleur_texte and not couleur_valide(couleur_texte):
-        raise ValueError(f"Couleur de texte invalide : {couleur_texte}")
-
-    if couleur_fond and not couleur_valide(couleur_fond):
-        raise ValueError(f"Couleur de fond invalide : {couleur_fond}")
+        couleur_texte = style.strip()
 
     # Construction de la chaîne de style CSS inline
     style_html = ""

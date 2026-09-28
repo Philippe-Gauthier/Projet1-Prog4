@@ -46,7 +46,7 @@ Slide::
 
 # ///Tester le programme
 
-{{#FF0000|Texte rouge en hexadécimal}}
+{{#FF0000 |Texte rouge en hexadécimal}}
 
 {{blue,=#FFFF00|Texte bleu avec fond jaune}}
 
