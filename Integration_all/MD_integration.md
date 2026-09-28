@@ -105,36 +105,6 @@ Slide::
 
 ## 7. Test Said
 
-# Mon document
-
-## Introduction
-
-Ceci est un texte normal.
-
-**Ceci est en gras.**
-
-*Ceci est en italique*
-
-***Ceci est en ******italique******&******Gras******.***
-
-### Ma liste :
-
-• Pomme
-
-• Banane
-
-• Orange
-
-### Ma liste numérotée :
-
-1. Étape un
-
-2. Étape deux
-
-3. Étape trois
-
-4. Étape quatre
-
 Mon tableau :
 
 | Dembele | Griezman | Ronaldo | Barcola |
@@ -148,6 +118,6 @@ Mon tableau :
 
 ### Mon image :
 
-![image1.jpeg](images/image1.jpeg)
+![image1.jpg](images/image1.jpg)
 
 <!-- SAID_END -->

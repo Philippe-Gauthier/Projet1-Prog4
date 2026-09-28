@@ -9,6 +9,14 @@ from docx.table import Table
 from docx.text.run import Run
 from docx.oxml.ns import qn
 
+
+# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
+SHORTCUT = "!!"
+# Fichier markdown source à lire
+#FILE = "MD_integration.md"
+# Fichier HTML de sortie généré
+#OUTPUT_FILE = "HTML_integration.html"
+
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
 DOSSIER = Path(__file__).resolve().parent
@@ -633,8 +641,22 @@ def preparer_markdown_depuis_word(chemin_word):
             if relation_id:
                 image = paragraphe.part.rels[relation_id].target_part
                 nom = Path(image.partname).name
-                (dossier_images / nom).write_bytes(image.blob)
-                texte += f"\n\n![{nom}](images/{nom})\n\n"
+                donnees = image.blob
+
+                chemin = dossier_images / nom
+                compteur = 1
+
+                # Chercher un nom libre si une image différente existe déjà
+                while chemin.exists() and chemin.read_bytes() != donnees:
+                    chemin = dossier_images / f"{Path(nom).stem}_{compteur}{Path(nom).suffix}"
+                    compteur += 1
+
+                # Sauvegarder seulement si l'image n'existe pas
+                if not chemin.exists():
+                    chemin.write_bytes(donnees)
+
+                # Utiliser le nom réel dans le Markdown
+                texte += f"\n\n![{chemin.name}](images/{chemin.name})\n\n"
 
         return texte
 
@@ -772,7 +794,6 @@ def preparer_markdown_depuis_word(chemin_word):
     fichier_md.write_text(contenu, encoding="utf-8")
 
     print("conversion Word vers Markdown terminée.")
-
 
 
 def generer_html_depuis_markdown():
