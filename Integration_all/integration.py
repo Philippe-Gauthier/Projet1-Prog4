@@ -212,7 +212,7 @@ def CenterText(File):
 
     for line in File.splitlines(keepends=True):
 
-        if line.lstrip().startswith("()") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
+        if line.lstrip().startswith("(MD)") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
             modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
             found = True
 
@@ -221,7 +221,7 @@ def CenterText(File):
             ERROR = True # Mise en erreur du code et demande de correction
             break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
 
-        elif line.lstrip().startswith("()") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
+        elif line.lstrip().startswith("(MD)") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
             modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
             found = False
 
@@ -229,10 +229,10 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing () for centered block")
+        raise ValueError("Missing closing (MD) for centered block")
     
     elif ERROR:
-        raise ValueError("Ne pas mettre de () autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n() \nSlide::\n()\n\n")
+        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
 
     return ''.join(modified_lines)
 
@@ -850,32 +850,57 @@ def generer_html_depuis_markdown():
     lignes = texte.splitlines(keepends=True)
     lignesModifiees = []
 
+    # Indique si le prochain arbre doit être centré
+    centrer_arbre = False
+
     # Parcourt chaque ligne du texte
     for ligne in lignes:
-        # Si la ligne commence par le raccourci défini (SHORTCUT, ex: "!!")
-        # c'est une demande de génération d'arbre de fichiers
+
+
+        # Détection de la commande de centrage d'arbre (TREE)
+        if ligne.lstrip().startswith("(TREE)"):
+
+            # Centrage du prochain arbre de fichiers généré
+            centrer_arbre = True
+
+            # On ne conserve pas (TREE) dans le Markdown final
+            continue
+
+        # Détection du raccourci !! pour créer un arbre
         if ligne.startswith(SHORTCUT):
-            # Extrait les paramètres après le raccourci (ex: chemin et profondeur)
+
+            # Extrait les paramètres après le raccourci
             parameters = ligne[len(SHORTCUT):].strip().split(' ')
-            # Le premier paramètre est le chemin du dossier à explorer
+
+            # Le premier paramètre est le chemin du dossier
             path = parameters[0]
 
-            # Tente de récupérer la profondeur maximale en 2e paramètre
-            # Si absent ou invalide, utilise une profondeur par défaut de 1
+            # Tente de récupérer la profondeur maximale
+            # Si absente ou invalide, utilise 1
             try:
                 depth = int(parameters[1])
             except (IndexError, ValueError):
                 depth = 1
 
-            # Construit la structure de données de l'arborescence (dict/list/str)
+            # Construit la structure de données de l'arborescence
             tree_data = build_tree(path, depth)
-            # Convertit cette structure en bloc HTML (div + liste)
+
+            # Convertit cette structure en bloc HTML
             html_tree = render_tree_block(tree_data)
+
+
+            # Si (TREE) est détecté avant le shortcut !!, on centre l'arbre dans le HTML final
+            if centrer_arbre:
+                html_tree = html_tree.replace('<div class="file-tree">','<div class="file-tree centered-tree">')
+
+                # Reset : le prochain arbre ne sera pas centré par défaut
+                centrer_arbre = False
 
             # Remplace la ligne du raccourci par le HTML généré
             lignesModifiees.append(html_tree + "\n")
 
         else:
+
             # Ligne normale : conservée telle quelle
             lignesModifiees.append(ligne)
 
