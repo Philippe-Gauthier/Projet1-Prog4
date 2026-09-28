@@ -904,7 +904,6 @@ def generer_html_depuis_markdown():
         print("Erreur : le fichier Markdown est vide.")
         return
 
-    texte = creer_table_matiere(texte)
 
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
