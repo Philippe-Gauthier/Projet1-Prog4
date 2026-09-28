@@ -17,9 +17,9 @@ Slide::
 
 Ceci est un test de la checklist.
 
-///Faire le code
-///Tester le programme
-///Faire la documentation
+=Faire le code
++Tester le programme
++Faire la documentation
 
 Slide::
 
@@ -33,7 +33,15 @@ Voici un texte qui devrait être centré.
 
 ()
 
+()
+This is a () test
+()
+
+This text should not be centered
+
+()
 Slide::
+()
 
 ## 4. Test Antoine
 
@@ -97,5 +105,25 @@ border-radius: 10px
 alt: texte alternatif ici
 @@@
 
+<!-- SAID_START -->
 
+Slide::
 
+## 7. Test Said
+
+Mon tableau :
+
+| Dembele | Griezman | Ronaldo | Barcola |
+| --- | --- | --- | --- |
+| Vitinha | Veratti | Mazadona | Zaire-emery |
+| Hakimi | mendes | marquinhos | Ramos |
+
+### Mon lien :
+
+[https://cegepsherbrooke.qc.ca/](https://cegepsherbrooke.qc.ca/)
+
+### Mon image :
+
+![image1.jpg](images/image1.jpg)
+
+<!-- SAID_END -->

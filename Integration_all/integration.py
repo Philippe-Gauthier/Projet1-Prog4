@@ -3,14 +3,25 @@ import re
 from pathlib import Path
 from textwrap import dedent
 from mistletoe.block_token import Heading
+from docx import Document
+from docx.text.paragraph import Paragraph
+from docx.table import Table
+from docx.text.run import Run
+from docx.oxml.ns import qn
 
 
 # Raccourci utilisé pour déclencher le style personnalisé dans le markdown
 SHORTCUT = "!!"
 # Fichier markdown source à lire
-FILE = "MD_integration.md"
+#FILE = "MD_integration.md"
 # Fichier HTML de sortie généré
-OUTPUT_FILE = "HTML_integration.html"
+#OUTPUT_FILE = "HTML_integration.html"
+
+# Raccourci utilisé pour déclencher le style personnalisé dans le markdown
+SHORTCUT = "!!"
+DOSSIER = Path(__file__).resolve().parent
+FILE = DOSSIER / "MD_integration.md"
+OUTPUT_FILE = DOSSIER / "HTML_integration.html"
 
 # Antoine
 
@@ -92,15 +103,18 @@ def checklistMD(nomFichier):
             # Liste temporaire des caractères/éléments pour construire la ligne modifiée
             modifiedLine = []
 
-            # Vérifie si la ligne est une ligne de checklist (commence par '///')
-            if  line.startswith('///'):
-
-                # Parcourt chaque caractère de la ligne après les 3 premiers caractères ('///')
-                for letter in line[3:]:
-                    modifiedLine.append(letter)
-
-                # Insère la balise HTML de la checkbox et le label au début de la ligne
-                modifiedLine.insert(0, '<input type="checkbox"> <label>')
+            # Vérifie si la ligne est une ligne de checklist (contient '+' ou '=')
+            if  (line.find('+') != -1) or (line.find('=') != -1):
+                # Parcourt chaque caractère de la ligne
+                for letter in line:
+                    if letter == "+":
+                        # Insère la balise HTML de la checkbox et le label au début de la ligne
+                        modifiedLine.append('<input type="checkbox"> <label>')
+                    elif letter == "=":
+                        # Insère la balise HTML de la checkbox et le label au début de la ligne
+                        modifiedLine.append('<input type="checkbox" checked> <label>')
+                    else:
+                        modifiedLine.append(letter)
 
                 # Si la ligne se termine par un saut de ligne, remplace le dernier élément
                 # par la fermeture du label suivie du saut de ligne
@@ -123,22 +137,37 @@ def checklistMD(nomFichier):
 
 # Bruno
 
+# Bruno
 def convertir_diapositive(texte, fichier_html):
 
     # Découpe le texte en diapositives à partir du séparateur "Slide::"
     slides = texte.split("Slide::")
     # Chaîne qui accumulera le HTML final de toutes les diapositives
     resultat = ""
+    #Nombre de lignes MAX
+    MAX_LIGNES = 26
 
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
 
 
     # Parcourt chaque diapositive extraite du texte
-    for slide in slides:
+    for numero_slide, slide in enumerate(slides[1:], start=1):
+          # Compte le nombre de lignes dans la diapositive
+        nombre_lignes = len(slide.strip().splitlines())
+
+        #Gestion des avertissements 
+        if nombre_lignes > MAX_LIGNES:
+            print(f"AVERTISSEMENT : La diapositive {numero_slide} dépasse la limite de lignes.")
+            print(f"Nombre de lignes : {nombre_lignes}")
+            print(f"Limite permise : {MAX_LIGNES}")
+            print("Une scrollbar sera créée pour permettre de faire défiler le contenu.")
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
+        
+        # Ajout des id aux titres HTML
+        rendu = ajouter_id_titres(rendu)
 
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
@@ -150,6 +179,7 @@ def convertir_diapositive(texte, fichier_html):
         # Ajoute la diapositive au résultat final
         resultat += slide_html
     print(resultat)
+
     css = f"""<!DOCTYPE html>
     <html>
     <head>
@@ -161,43 +191,59 @@ def convertir_diapositive(texte, fichier_html):
     </body>
     </html>
     """
-
-    # Écrit le CSS et le résultat final dans le fichier HTML de sortie
     with open(fichier_html, 'w', encoding='utf-8') as fout:
-        fout.write(css)
+            fout.write(css)
+
+
 
 
 #jay
-def CenterText(md_content):
-    found = False  # Variable pour savoir si on est dans une zone centrée
+def CenterText(File):
+    found = False
+    ERROR = False
+    modified_lines = []
 
-    # Découpe le contenu markdown en une liste de lignes
-    lines = md_content.splitlines('\n')
+    for line in File.splitlines(keepends=True):
 
-    modified_lines = []  # Garde les lignes après modification
+        if line.lstrip().startswith("()") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
+            modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
+            found = True
 
-    # Parcourt chaque ligne du contenu
-    for Symbol in lines:
-        Shortcut = '()'  # Recherche du motif à remplacer
+        elif line.lstrip().startswith("Slide::") and found: # Vérification si l'utilisateur ne tente de centrer une diapositive
+            found = False # Reset de la détection
+            ERROR = True # Mise en erreur du code et demande de correction
+            break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
 
-        # Si le motif est trouvé et qu'on n'est pas encore dans une zone centrée
-        # -> on ouvre la zone centrée
-        if Symbol.find(Shortcut) != -1 and (found == False):
-            Symbol = Symbol.replace(Shortcut,'<div align="center">\n',1)
-            found = True  # On est maintenant dans une zone centrée
+        elif line.lstrip().startswith("()") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
+            modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
+            found = False
 
-        # Si le motif est trouvé et qu'on est déjà dans une zone centrée
-        # -> on ferme la zone centrée
-        elif Symbol.find(Shortcut) != -1 and (found == True):
-            Symbol = Symbol.replace(Shortcut,'</div>\n',1)
-            found = False  # On sort de la zone centrée
+        else:
+            modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
-        modified_lines.append(Symbol)  # Ajoute la ligne modifiée
+    if found:
+        raise ValueError("Missing closing () for centered block")
+    
+    elif ERROR:
+        raise ValueError("Ne pas mettre de () autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n() \nSlide::\n()\n\n")
 
-    return '\n'.join(modified_lines)  # Retourne le texte complet
+    return ''.join(modified_lines)
 
 
 #Nico
+
+def creer_lien(titre): 
+    # Mettre le titre en minuscules 
+    lien = titre.lower() 
+    
+    # Remplacer les espaces par des tirets 
+    lien = lien.replace(" ", "-") 
+    
+    # Enlever les caractères spéciaux 
+    lien = re.sub(r"[^a-z0-9\-]", "", lien)
+    
+    return lien
+
 def creer_table_matiere(texte):
 
     # Vérifier si le marqueur existe
@@ -230,7 +276,7 @@ def creer_table_matiere(texte):
                         texteTitre += partieTitre.content
 
                 # Crée le lien d'ancre en remplaçant les espaces par des tirets
-                lienTitre = texteTitre.lower().replace(" ", "-")
+                lienTitre = creer_lien(texteTitre)
 
                 # Ajouter le titre dans la table
                 # L'indentation dépend du niveau du titre (##, ###, ####, etc.)
@@ -254,8 +300,30 @@ def creer_table_matiere(texte):
 
     return New_texte
 
+def ajouter_id_titres(html): 
+    """ Ajoute un id aux titres h2 à h6
+    pour permettre aux liens de la table des matières 
+    de fonctionner. 
+    """ 
+    
+    def remplacer_titre(match): 
+        
+        niveau = match.group(1)
+        titre = match.group(2)
+        
+        # Créer le même lien que dans la table des matières 
+        lien = creer_lien(titre)
+        
+        return f'<h{niveau} id="{lien}">{titre}</h{niveau}>' 
+    
+    # Chercher les titres h2 à h6 
+    html = re.sub( r'<h([2-6])>(.*?)</h\1>', remplacer_titre, html ) 
+    
+    return html
+
 # Zach
 def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
+
     """
     Reads a folder and builds a tree consisting of all the files at a certain depth.
     """
@@ -277,24 +345,28 @@ def build_tree(path: str, max_depth, current_depth=1) -> dict | list | str:
     # Si on a atteint la profondeur maximale, retourne uniquement la liste des noms
     # des fichiers/dossiers à ce niveau (en ignorant les fichiers cachés)
     if current_depth == max_depth:
-        return [f.name for f in path.iterdir() if not f.name.startswith('.')]
-
+        try : 
+            return [f.name for f in path.iterdir() if not f.name.startswith('.')]
+        except PermissionError:
+            return ""
     # Dictionnaire qui représentera l'arborescence à ce niveau
     tree = {}
 
     # Parcourt chaque élément (fichier ou dossier) du chemin courant
-    for item in path.iterdir():
-        # Ignore les fichiers/dossiers cachés
-        if item.name.startswith('.'):
-            continue
+    try:
+        for item in path.iterdir():
+            # Ignore les fichiers/dossiers cachés
+            if item.name.startswith('.'):
+                continue
 
-        if item.is_dir():
-            # Appel récursif pour construire l'arborescence des sous-dossiers
-            tree[item.name] = build_tree(item, max_depth, current_depth + 1)
-        else:
-            # Pour un fichier, on stocke simplement son nom
-            tree[item.name] = item.name
-
+            if item.is_dir():
+                # Appel récursif pour construire l'arborescence des sous-dossiers
+                tree[item.name] = build_tree(item, max_depth, current_depth + 1)
+            else:
+                # Pour un fichier, on stocke simplement son nom
+                tree[item.name] = item.name
+    except PermissionError:
+        return tree
     return tree
 
 
@@ -561,8 +633,184 @@ def preprocess(text):
     # Reconstitue le texte final
     return "\n".join(output)
 
+# SAID 
+def preparer_markdown_depuis_word(chemin_word):
 
+    fichier_md = Path(FILE)
+    dossier_images = fichier_md.parent / "images"
+    dossier_images.mkdir(parents=True, exist_ok=True)
+    document = Document(chemin_word)
 
+    def convertir_run(element, paragraphe):
+        run = Run(element, paragraphe)
+        texte = run.text
+
+        if run.bold and run.italic:
+            texte = f"***{texte}***"
+        elif run.bold:
+            texte = f"**{texte}**"
+        elif run.italic:
+            texte = f"*{texte}*"
+
+        for image_xml in element.iter(qn("a:blip")):
+            relation_id = image_xml.get(qn("r:embed"))
+
+            if relation_id:
+                image = paragraphe.part.rels[relation_id].target_part
+                nom = Path(image.partname).name
+                donnees = image.blob
+
+                chemin = dossier_images / nom
+                compteur = 1
+
+                # Chercher un nom libre si une image différente existe déjà
+                while chemin.exists() and chemin.read_bytes() != donnees:
+                    chemin = dossier_images / f"{Path(nom).stem}_{compteur}{Path(nom).suffix}"
+                    compteur += 1
+
+                # Sauvegarder seulement si l'image n'existe pas
+                if not chemin.exists():
+                    chemin.write_bytes(donnees)
+
+                # Utiliser le nom réel dans le Markdown
+                texte += f"\n\n![{chemin.name}](images/{chemin.name})\n\n"
+
+        return texte
+
+    def convertir_paragraphe(paragraphe):
+        resultat = ""
+
+        for element in paragraphe._p:
+            if element.tag == qn("w:r"):
+                resultat += convertir_run(element, paragraphe)
+
+            elif element.tag == qn("w:hyperlink"):
+                texte = "".join(
+                    convertir_run(run, paragraphe)
+                    for run in element.findall(qn("w:r"))
+                )
+
+                relation_id = element.get(qn("r:id"))
+
+                if relation_id:
+                    url = paragraphe.part.rels[relation_id].target_ref
+                    resultat += f"[{texte}]({url})"
+                else:
+                    resultat += texte
+
+        return resultat
+
+    def convertir_tableau(tableau):
+        lignes = []
+
+        for numero, ligne in enumerate(tableau.rows):
+            cellules = []
+
+            for cellule in ligne.cells:
+                texte = " ".join(
+                    convertir_paragraphe(p).strip()
+                    for p in cellule.paragraphs
+                )
+
+                texte = texte.replace("|", "\\|")
+                texte = texte.replace("\n", "<br>")
+                cellules.append(texte)
+
+            lignes.append("| " + " | ".join(cellules) + " |")
+
+            if numero == 0:
+                lignes.append(
+                    "| " + " | ".join("---" for _ in cellules) + " |"
+                )
+
+        return "\n".join(lignes) + "\n\n"
+
+    markdown = ""
+    liste_en_cours = False
+
+    for element in document.element.body.iterchildren():
+
+        if element.tag == qn("w:p"):
+            paragraphe = Paragraph(element, document)
+            texte = convertir_paragraphe(paragraphe).strip()
+
+            if not texte:
+                continue
+
+            style = paragraphe.style.name
+
+            if style.startswith("Heading ") and style[8:].isdigit():
+                niveau = int(style[8:])
+
+                if 1 <= niveau <= 6:
+                    if liste_en_cours:
+                        markdown += "\n"
+
+                    markdown += "#" * niveau + " " + texte + "\n\n"
+                    liste_en_cours = False
+                    continue
+
+            if style.startswith("List Bullet"):
+                if not liste_en_cours and markdown and not markdown.endswith("\n\n"):
+                    markdown += "\n"
+
+                markdown += "- " + texte + "\n"
+                liste_en_cours = True
+
+            elif style.startswith("List Number"):
+                if not liste_en_cours and markdown and not markdown.endswith("\n\n"):
+                    markdown += "\n"
+
+                markdown += "1. " + texte + "\n"
+                liste_en_cours = True
+
+            else:
+                if liste_en_cours:
+                    markdown += "\n"
+
+                markdown += texte + "\n\n"
+                liste_en_cours = False
+
+        elif element.tag == qn("w:tbl"):
+            tableau = Table(element, document)
+            if liste_en_cours:
+                markdown += "\n"
+
+            markdown += convertir_tableau(tableau)
+            liste_en_cours = False
+
+    # Intégration sans effacer le Markdown des autres
+    debut = "<!-- SAID_START -->"
+    fin = "<!-- SAID_END -->"
+
+    bloc_said = (
+        f"{debut}\n\n"
+        f"Slide::\n\n"
+        f"## 7. Test Said\n\n"
+        f"{markdown.strip()}\n\n"
+        f"{fin}"
+    )
+
+    if fichier_md.exists():
+        contenu = fichier_md.read_text(encoding="utf-8")
+    else:
+        contenu = ""
+
+    if debut in contenu and fin in contenu:
+        position_debut = contenu.index(debut)
+        position_fin = contenu.index(fin) + len(fin)
+
+        contenu = (
+            contenu[:position_debut]
+            + bloc_said
+            + contenu[position_fin:]
+        )
+    else:
+        contenu = contenu.rstrip() + "\n\n" + bloc_said + "\n"
+
+    fichier_md.write_text(contenu, encoding="utf-8")
+
+    print("conversion Word vers Markdown terminée.")
 
 
 def generer_html_depuis_markdown():
@@ -581,7 +829,12 @@ def generer_html_depuis_markdown():
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
     # une table des matières générée à partir des titres markdown (## à ######)
+       
     texte = creer_table_matiere(texte)
+    
+    
+    
+    
 
     
 
@@ -654,11 +907,31 @@ def generer_html_depuis_markdown():
     # Will : image
 
     texte = preprocess(texte)
+    
+   
+
 
     # Création du HTML final
     # Découpe le texte en diapositives ("Slide::"), convertit chacune en HTML,
     # applique les styles de couleur (Antoine), puis écrit le résultat
     # (CSS + diapositives) dans le fichier de sortie OUTPUT_FILE
     convertir_diapositive(texte, OUTPUT_FILE)
+    
+    
 
-generer_html_depuis_markdown()
+
+if __name__ == "__main__":
+
+    fichier_word = DOSSIER / "test.docx"
+
+    if fichier_word.is_file():
+        preparer_markdown_depuis_word(fichier_word)
+    else:
+        print("Aucun document Word trouvé. Utilisation du Markdown existant.")
+
+    if FILE.is_file():
+        generer_html_depuis_markdown()
+    else:
+        print("Erreur : MD_integration.md est introuvable.")
+
+    generer_html_depuis_markdown()
