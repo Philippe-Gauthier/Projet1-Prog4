@@ -105,19 +105,31 @@ def checklistMD(nomFichier):
 
 # Bruno
 
+# Bruno
 def convertir_diapositive(texte, fichier_html):
 
     # Découpe le texte en diapositives à partir du séparateur "Slide::"
     slides = texte.split("Slide::")
     # Chaîne qui accumulera le HTML final de toutes les diapositives
     resultat = ""
+    #Nombre de lignes MAX
+    MAX_LIGNES = 26
 
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
 
 
     # Parcourt chaque diapositive extraite du texte
-    for slide in slides:
+    for numero_slide, slide in enumerate(slides[1:], start=1):
+          # Compte le nombre de lignes dans la diapositive
+        nombre_lignes = len(slide.strip().splitlines())
+
+        #Gestion des avertissements 
+        if nombre_lignes > MAX_LIGNES:
+            print(f"AVERTISSEMENT : La diapositive {numero_slide} dépasse la limite de lignes.")
+            print(f"Nombre de lignes : {nombre_lignes}")
+            print(f"Limite permise : {MAX_LIGNES}")
+            print("Une scrollbar sera créée pour permettre de faire défiler le contenu.")
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
@@ -146,24 +158,30 @@ def convertir_diapositive(texte, fichier_html):
     </body>
     </html>
     """
-
-    # Écrit le CSS et le résultat final dans le fichier HTML de sortie
     with open(fichier_html, 'w', encoding='utf-8') as fout:
-        fout.write(css)
+            fout.write(css)
+
+
 
 
 #jay
 def CenterText(File):
     found = False
+    ERROR = False
     modified_lines = []
 
     for line in File.splitlines(keepends=True):
 
-        if line.lstrip().startswith("()") and not found:
+        if line.lstrip().startswith("()") and not found: # Vérifie si c'est le début d'un bloc centré et qu'on n'est pas déjà dans un bloc centré
             modified_lines.append('<div align="center">\n') # Met la ligne modifié avec la balise de fermeture <div align="center"> dans modified_lines 
             found = True
 
-        elif line.lstrip().startswith("()") and found:
+        elif line.lstrip().startswith("Slide::") and found: # Vérification si l'utilisateur ne tente de centrer une diapositive
+            found = False # Reset de la détection
+            ERROR = True # Mise en erreur du code et demande de correction
+            break # Si on rencontre une nouvelle diapositive avant de fermer le bloc centré, on sort de la boucle
+
+        elif line.lstrip().startswith("()") and found: # Vérifie si nous somme déja dans un bloc centré à fermer
             modified_lines.append('</div>\n') # Met la ligne modifié avec la balise de fermeture </div> dans modified_lines
             found = False
 
@@ -172,6 +190,9 @@ def CenterText(File):
 
     if found:
         raise ValueError("Missing closing () for centered block")
+    
+    elif ERROR:
+        raise ValueError("Ne pas mettre de () autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n() \nSlide::\n()\n\n")
 
     return ''.join(modified_lines)
 
