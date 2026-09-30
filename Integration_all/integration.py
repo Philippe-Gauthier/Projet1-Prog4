@@ -137,7 +137,7 @@ def convertir_diapositive(texte, fichier_html):
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
     # Parcourt chaque diapositive extraite du texte
-    for numero_slide, slide in enumerate(slides[1:], start=1):
+    for numero_slide, slide in enumerate(slides[0:], start=0):
           # Compte le nombre de lignes dans la diapositive
         nombre_lignes = len(slide.strip().splitlines())
 
@@ -150,6 +150,9 @@ def convertir_diapositive(texte, fichier_html):
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
+
+        # Ajoute les id aux titres pour les liens de la table des matières
+        rendu = ajouter_id_titres(rendu)
 
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
@@ -177,7 +180,83 @@ def convertir_diapositive(texte, fichier_html):
     <html>
     <head>
         <meta charset="utf-8"/>
-        <link href="style.css" rel="stylesheet"/>
+        <style>
+        .file-tree {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            line-height: 1.8;
+        }}
+
+        .file-tree.centered-tree {{
+            width: fit-content;
+            margin: 0 auto;
+        }}
+
+        /* Reset and indent nested folders */
+        .file-tree ul {{
+            list-style-type: none;
+            padding-left: 20px;
+            margin: 0;
+            position: relative;
+            overflow: auto;
+        }}
+
+        /* Vertical branch line for connecting sub-folders/files */
+        .file-tree ul::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 7px;
+            bottom: 12px;
+            border-left: 2px solid #b8b8b8;
+        }}
+
+        /* Individual list items */
+        .file-tree li {{
+            margin: 0;
+            padding: 3px 0 3px 15px;
+            position: relative;
+        }}
+
+        /* Horizontal branch lines pointing to folders/files */
+        .file-tree li::before {{
+            content: "";
+            position: absolute;
+            top: 13px;
+            left: -8px;
+            width: 15px;
+            height: 1px;
+            border-top: 2px solid #b8b8b8;
+        }}
+
+        /* Stops the vertical line at the last item of a directory level */
+        .file-tree li:last-child::before {{
+            background: transparent;
+            height: 1px;
+        }}
+
+        /* Folder styling */
+        .folder {{
+            font-weight: 600;
+        }}
+
+        .folder::before {{
+            content: "📁 ";
+        }}
+
+        /* File styling */
+        .file::before {{
+            content: "📄 ";
+        }}
+
+        .slide {{
+            background-color: rgb(100, 100, 100);
+            width: 100vw;
+            height: 70vh;
+            margin-bottom: 30px;
+            overflow: auto;
+            }}
+        </style>
     </head>
     <body>
         {resultat}
