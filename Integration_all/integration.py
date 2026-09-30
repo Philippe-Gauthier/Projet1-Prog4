@@ -619,9 +619,6 @@ def preprocess(text):
             if alt_description:
                 html += f' alt="{alt_description}"'
 
-            if title_description:
-                html += f' title="{title_description}"'
-
             alt_description = ""  # Reset pour pas leak
             title_description = ""  # Reset pour pas leak
 

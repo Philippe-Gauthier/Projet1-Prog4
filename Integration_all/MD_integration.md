@@ -82,7 +82,7 @@ Slide::
 ## 6. Test Will
 
 >>>
-src: Libra.jpeg
+src: https://video.twimg.com/amplify_video/2103781079731814400/vid/avc1/720x1280/Pymh0PpZPDMtyHKJ.mp4?tag=29
 width: 500px
 height: 500px
 margin-left: 50px
@@ -142,16 +142,19 @@ Ceci est un texte normal.
 ### Ma liste numérotée :
 
 1. Étape un
+
 2. Étape deux
+
 3. Étape trois
+
 4. Étape quatre
 
 Mon tableau :
 
-| Dembele | Griezman | Ronaldo    | Barcola     |
-| ------- | -------- | ---------- | ----------- |
-| Vitinha | Veratti  | Mazadona   | Zaire-emery |
-| Hakimi  | mendes   | marquinhos | Ramos       |
+| Dembele | Griezman | Ronaldo | Barcola |
+| --- | --- | --- | --- |
+| Vitinha | Veratti | Mazadona | Zaire-emery |
+| Hakimi | mendes | marquinhos | Ramos |
 
 ### Mon lien :
 
