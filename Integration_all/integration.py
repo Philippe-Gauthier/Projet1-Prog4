@@ -516,7 +516,7 @@ def preprocess(text):
 #######################################PHOTO#####################################################################################################################
         # Cherche le début d'un bloc @@@
         # Une fois trouvé, on cherche le prochain @@@ pour marquer la fin du bloc 
-        if lines[i].strip() in ("@@@", ">>>"):
+        if lines[i].strip() in ("@@@", "<<<"):
 
             # Détermine le type selon le délimiteur
             delimiter = lines[i].strip()
@@ -531,8 +531,8 @@ def preprocess(text):
             # Aucun @@@ de fermeture trouvé
             if j >= len(lines):
                 raise ValueError(
-                    f"@@@ ou >>> Invalide a la ligne {i + 1}: "
-                    "@@@ ou >>> de fermeture attendue."
+                    f"@@@ ou <<< Invalide a la ligne {i + 1}: "
+                    "@@@ ou <<< de fermeture attendue."
                 )
 
             # Dictionnaire contenant les propriétés de l'image
@@ -550,7 +550,7 @@ def preprocess(text):
                 # Vérifie que la ligne contient ":"
                 if ":" not in line:
                     raise ValueError(
-                        f"Propriétés invalide dans le bloc @@@/>>>: {line}"
+                        f"Propriétés invalide dans le bloc @@@/<<<: {line}"
                     )
 
                 # Sépare la propriété et sa valeur
@@ -573,7 +573,7 @@ def preprocess(text):
                 # Vérifie que la clé est une propriété CSS valide
                 if key not in VALID_CSS_PROPERTIES:
                     raise ValueError(
-                        f"Propriété CSS inconnu dans le bloc @@@/>>> "
+                        f"Propriété CSS inconnu dans le bloc @@@/<<< "
                         f"a la ligne {i + 1}: '{key}'"
                     )
 
@@ -589,7 +589,7 @@ def preprocess(text):
             # L'attribut src est obligatoire (ofc lol)
             if "src" not in properties:
                 raise ValueError(
-                    f"@@@ ou >>> Invalide a la ligne {i + 1}: "
+                    f"@@@ ou <<< Invalide a la ligne {i + 1}: "
                     "'src' manquant."
                 )
 
