@@ -94,6 +94,11 @@ border-radius: 10px
 alt: texte alternatif ici
 @@@
 
+<<<
+src: https://video.twimg.com/amplify_video/2103781079731814400/vid/avc1/720x1280/Pymh0PpZPDMtyHKJ.mp4?tag=29
+alt: texte alternatif ici
+<<< 
+
 # 
 
 # \## 4. Test Antoine

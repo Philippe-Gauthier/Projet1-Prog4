@@ -2,88 +2,12 @@
     <html>
     <head>
         <meta charset="utf-8"/>
-        <style>
-        .file-tree {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .file-tree.centered-tree {
-            width: fit-content;
-            margin: 0 auto;
-        }
-
-        /* Reset and indent nested folders */
-        .file-tree ul {
-            list-style-type: none;
-            padding-left: 20px;
-            margin: 0;
-            position: relative;
-            overflow: auto;
-        }
-
-        /* Vertical branch line for connecting sub-folders/files */
-        .file-tree ul::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 7px;
-            bottom: 12px;
-            border-left: 2px solid #b8b8b8;
-        }
-
-        /* Individual list items */
-        .file-tree li {
-            margin: 0;
-            padding: 3px 0 3px 15px;
-            position: relative;
-        }
-
-        /* Horizontal branch lines pointing to folders/files */
-        .file-tree li::before {
-            content: "";
-            position: absolute;
-            top: 13px;
-            left: -8px;
-            width: 15px;
-            height: 1px;
-            border-top: 2px solid #b8b8b8;
-        }
-
-        /* Stops the vertical line at the last item of a directory level */
-        .file-tree li:last-child::before {
-            background: transparent;
-            height: 1px;
-        }
-
-        /* Folder styling */
-        .folder {
-            font-weight: 600;
-        }
-
-        .folder::before {
-            content: "📁 ";
-        }
-
-        /* File styling */
-        .file::before {
-            content: "📄 ";
-        }
-
-        .slide {
-            background-color: rgb(100, 100, 100);
-            width: 100vw;
-            height: 70vh;
-            margin-bottom: 30px;
-            overflow: auto;
-            }
-        </style>
+        <link href="style.css" rel="stylesheet"/>
     </head>
     <body>
         <div class="slide" style="background-color: white;"><h2>1. Test Zach</h2>
 <p>Ceci est un test de la fonction de Zach.</p>
-<div class="file-tree"><ul><li><span class="file">HTML_integration.html</span></li><li><span class="folder">Integration_all</span><ul><li><span class="file">HTML_integration.html</span></li><li><span class="file">images</span></li><li><span class="file">integration.py</span></li><li><span class="file">Libra.jpeg</span></li><li><span class="file">MD_integration.md</span></li><li><span class="file">style.css</span></li><li><span class="file">Test.docx</span></li></ul></li><li><span class="file">product_backlog.md</span></li><li><span class="file">README.md</span></li><li><span class="file">run.ps1</span></li></ul></div></div><div class="slide" style="background-color: white;"><h2>2. Test Amé</h2>
+<div class="file-tree"><ul><li><span class="folder">Integration_all</span><ul><li><span class="file">HTML_integration.html</span></li><li><span class="file">images</span></li><li><span class="file">integration.py</span></li><li><span class="file">Libra.jpeg</span></li><li><span class="file">MD_integration.md</span></li><li><span class="file">Test.docx</span></li></ul></li><li><span class="file">product_backlog.md</span></li><li><span class="file">README.md</span></li><li><span class="file">run.ps1</span></li></ul></div></div><div class="slide" style="background-color: white;"><h2>2. Test Amé</h2>
 <p>Ceci est un test de la checklist.</p>
 <p><input type="checkbox" checked> <label>Faire le code</label><br>
 <input type="checkbox"> <label>Tester le programme</label><br>
@@ -95,11 +19,11 @@
 <p>()
 This is a () test
 ()</p>
-<p>This text should not be centered</p></div><div class="slide" style="background-color: white;"><h1></h1>
-<h1>///Faire le code</h1>
-<h1>///Tester le programme</h1>
+<p>This text should not be centered</p></div><div class="slide" style="background-color: white;"><h2>4. Test Antoine</h2>
+<p>Ceci est un test des couleurs.</p>
+<p><span style="color: red; ">Texte rouge</span></p>
 <p><span style="color: #FF0000; ">Texte rouge en hexadécimal</span></p>
-<p><span style="color: blue; background-color: #FFFF00; ">Texte bleu avec fond jaune</span></p>
+<p><span style="color: blue; background-color: #FFFF00; ">Texte bleu avec fond jauneeS</span></p>
 <p><span style="color: blue; ">Texte bleu</span></p>
 <p><span style="background-color: yellow; ">Texte avec un fond jaune</span></p>
 <p><span style="color: red; background-color: yellow; ">Texte rouge avec un fond jaune</span></p></div><div class="slide" style="background-color: yellow; color: white"><h2>5. Test ensemble</h2>
@@ -113,7 +37,65 @@ This is a () test
 ///Tâche 2
 ///Tâche 3</p>
 <p>Voici encore du <span style="color: blue; ">texte bleu</span>.</p></div><div class="slide" style="background-color: white;"><h2>6. Test Will</h2>
-<img src="Libra.jpeg" style="width: 500px; height: 500px; margin-left: 50px; margin-top: 20px; border-radius: 10px;" alt="texte alternatif ici"></div><div class="slide" style="background-color: white;"><img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif" style="width: 400px; height: 500px; margin-left: 50px; margin-top: 20px; border-radius: 10px;" alt="texte alternatif ici">
+<img src="Libra.jpeg" style="width: 500px; height: 500px; margin-left: 50px; margin-top: 20px; border-radius: 10px;" alt="texte alternatif ici">
+<video src="https://video.twimg.com/amplify_video/2103781079731814400/vid/avc1/720x1280/Pymh0PpZPDMtyHKJ.mp4?tag=29" controls alt="texte alternatif ici">
+<h1></h1>
+<h1>## 4. Test Antoine</h1>
+<h1></h1>
+<h1>Ceci est un test des couleurs.</h1>
+<h1></h1>
+<h1><span style="color: reed; ">Texte rouge</span></h1>
+<h1></h1>
+<h1><span style="color: bluee; ">Texte bleu</span></h1>
+<h1></h1>
+<h1><span style="background-color: yellow; ">Texte avec un fond jaune</span></h1>
+<h1></h1>
+<h1><span style="color: red; background-color: yellow; ">Texte rouge avec un fond jaune</span></h1>
+<h1></h1>
+<h1></h1></div><div class="slide" style="background-color: white;"><h1></h1>
+<h1></h1>
+<h1></h1>
+<h1>## 5. Test ensemble</h1>
+<h1></h1>
+<h1>Cette slide teste les fonctions qui fonctionnent ensemble.</h1>
+<h1></h1>
+<h1>Voici du <span style="color: red; ">texte rouge</span> dans la même slide.</h1>
+<h1></h1>
+<h1>()</h1>
+<h1></h1>
+<h1>Ce texte devrait être centré.</h1>
+<h1></h1>
+<h1>()</h1>
+<h1></h1>
+<h1>///Tâche 1</h1>
+<h1>///Tâche 2</h1>
+<h1>///Tâche 3</h1>
+<h1></h1>
+<h1>Voici encore du <span style="color: blue; ">texte bleu</span>.</h1>
+<h1></h1></div><div class="slide" style="background-color: white;"><h1>## 6. Test Will</h1>
+<h1></h1>
+<h1>@@@</h1>
+<h1>src: Libra.jpeg</h1>
+<h1>width: 500px</h1>
+<h1>height: 500px</h1>
+<h1>margin-left: 50px</h1>
+<h1>margin-top: 20px</h1>
+<h1>border-radius: 10px</h1>
+<h1>alt: texte alternatif ici</h1>
+<h1>@@@</h1>
+<h1></h1>
+<h1></h1></div><div class="slide" style="background-color: white;"><h1></h1>
+<h1>@@@</h1>
+<h1>src: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif</h1>
+<h1>width: 400px</h1>
+<h1>height: 500px</h1>
+<h1>margin-left: 50px</h1>
+<h1>margin-top: 20px</h1>
+<h1>border-radius: 10px</h1>
+<h1>alt: texte alternatif ici</h1>
+<h1>@@@</h1>
+<h1></h1>
+<img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm5qMnF1ZW5wcTZtb2dqOXMxb3Mwa3J4YXpwdGtvYTRxOWkyNHB0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tR9Si4uQqcHcseVOZN/giphy.gif" style="width: 400px; height: 500px; margin-left: 50px; margin-top: 20px; border-radius: 10px;" alt="texte alternatif ici">
 <!-- SAID_START --></div><div class="slide" style="background-color: white;"><h2>7. Test Said</h2>
 <h1>Mon document</h1>
 <h2>Introduction</h2>
