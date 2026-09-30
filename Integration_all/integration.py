@@ -57,7 +57,14 @@ def ajouter_style(match):
 
     else:
         couleur_texte = style.strip()
+    # Vérifie les couleurs après avoir retiré les espaces
+    if couleur_texte and not couleur_valide(couleur_texte):
+        print(f"Erreur : couleur de texte invalide : {couleur_texte}")
+        return texte
 
+    if couleur_fond and not couleur_valide(couleur_fond):
+        print(f"Erreur : couleur de fond invalide : {couleur_fond}")
+        return texte
     # Construction de la chaîne de style CSS inline
     style_html = ""
 
