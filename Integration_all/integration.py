@@ -57,7 +57,14 @@ def ajouter_style(match):
 
     else:
         couleur_texte = style.strip()
+    # Vérifie les couleurs après avoir retiré les espaces
+    if couleur_texte and not couleur_valide(couleur_texte):
+        print(f"Erreur : couleur de texte invalide : {couleur_texte}")
+        return texte
 
+    if couleur_fond and not couleur_valide(couleur_fond):
+        print(f"Erreur : couleur de fond invalide : {couleur_fond}")
+        return texte
     # Construction de la chaîne de style CSS inline
     style_html = ""
 
@@ -130,7 +137,7 @@ def convertir_diapositive(texte, fichier_html):
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
     # Parcourt chaque diapositive extraite du texte
-    for numero_slide, slide in enumerate(slides[1:], start=1):
+    for numero_slide, slide in enumerate(slides[0:], start=0):
           # Compte le nombre de lignes dans la diapositive
         nombre_lignes = len(slide.strip().splitlines())
 
@@ -143,6 +150,9 @@ def convertir_diapositive(texte, fichier_html):
 
         # Convertit le contenu markdown de la diapositive en HTML
         rendu = mistletoe.markdown(slide)
+
+        # Ajoute les id aux titres pour les liens de la table des matières
+        rendu = ajouter_id_titres(rendu)
 
         # Antoine : couleurs
         # Applique le style personnalisé (couleurs) via la fonction ajouter_style
@@ -170,7 +180,83 @@ def convertir_diapositive(texte, fichier_html):
     <html>
     <head>
         <meta charset="utf-8"/>
-        <link href="style.css" rel="stylesheet"/>
+        <style>
+        .file-tree {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            line-height: 1.8;
+        }}
+
+        .file-tree.centered-tree {{
+            width: fit-content;
+            margin: 0 auto;
+        }}
+
+        /* Reset and indent nested folders */
+        .file-tree ul {{
+            list-style-type: none;
+            padding-left: 20px;
+            margin: 0;
+            position: relative;
+            overflow: auto;
+        }}
+
+        /* Vertical branch line for connecting sub-folders/files */
+        .file-tree ul::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 7px;
+            bottom: 12px;
+            border-left: 2px solid #b8b8b8;
+        }}
+
+        /* Individual list items */
+        .file-tree li {{
+            margin: 0;
+            padding: 3px 0 3px 15px;
+            position: relative;
+        }}
+
+        /* Horizontal branch lines pointing to folders/files */
+        .file-tree li::before {{
+            content: "";
+            position: absolute;
+            top: 13px;
+            left: -8px;
+            width: 15px;
+            height: 1px;
+            border-top: 2px solid #b8b8b8;
+        }}
+
+        /* Stops the vertical line at the last item of a directory level */
+        .file-tree li:last-child::before {{
+            background: transparent;
+            height: 1px;
+        }}
+
+        /* Folder styling */
+        .folder {{
+            font-weight: 600;
+        }}
+
+        .folder::before {{
+            content: "📁 ";
+        }}
+
+        /* File styling */
+        .file::before {{
+            content: "📄 ";
+        }}
+
+        .slide {{
+            background-color: rgb(100, 100, 100);
+            width: 100vw;
+            height: 70vh;
+            margin-bottom: 30px;
+            overflow: auto;
+            }}
+        </style>
     </head>
     <body>
         {resultat}
@@ -208,10 +294,10 @@ def CenterText(File):
             modified_lines.append(line) # Met la ligne non modifiée dans modified_lines
 
     if found:
-        raise ValueError("Missing closing (MD) for centered block")
+        raise ValueError("(MD) manquant dans la dernière slide")
     
     elif ERROR:
-        raise ValueError("Ne pas mettre de (MD) autour d'une diapositive, sinon ça va crash le HTML\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n(MD)\n\n")
+        raise ValueError("Vérifiez la syntaxe de vos blocs centrés, un (MD) a été ouvert mais pas fermé avant une diapositive. \n\nL'erreur ressemble probablement à ceci dans le fichier MD_integration.md :\n\n(MD) \nSlide::\n\n")
 
     return ''.join(modified_lines)
 
@@ -835,7 +921,6 @@ def generer_html_depuis_markdown():
         print("Erreur : le fichier Markdown est vide.")
         return
 
-    texte = creer_table_matiere(texte)
 
     # Nico : table des matières
     # Cherche le marqueur "**contenu:**" dans le texte et le remplace par
