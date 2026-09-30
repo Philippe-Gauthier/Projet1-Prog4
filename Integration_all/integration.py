@@ -130,7 +130,7 @@ def convertir_diapositive(texte, fichier_html):
     # Feuille de style CSS appliquée aux diapositives et à l'arborescence de fichiers
 
     # Parcourt chaque diapositive extraite du texte
-    for numero_slide, slide in enumerate(slides[1:], start=1):
+    for numero_slide, slide in enumerate(slides[0:], start=0):
           # Compte le nombre de lignes dans la diapositive
         nombre_lignes = len(slide.strip().splitlines())
 
